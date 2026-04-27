@@ -1,0 +1,16 @@
+# Ignorar dados gerados
+output/
+
+# Ignorar modelos de IA pesados
+models/vault/*.gguf
+
+# Ignorar arquivos do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignorar ambientes virtuais
+.venv/
+venv/
+env/
+.env

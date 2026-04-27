@@ -1,0 +1,9 @@
+numpy
+pandas
+lxml
+scikit-learn
+huggingface_hub
+optuna
+torch
+torchvision
+llama-cpp-python

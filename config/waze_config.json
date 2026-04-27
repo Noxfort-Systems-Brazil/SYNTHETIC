@@ -1,0 +1,14 @@
+{
+  "jam": {
+    "street": "Rodovia PR-445 (Simulada)",
+    "city": "Londrina",
+    "country": "BR",
+    "type": "NONE"
+  },
+  "alert": {
+    "type": "ACCIDENT",
+    "subtype": "ACCIDENT_MINOR",
+    "street": "Rodovia PR-445 (Simulada)",
+    "reportDescription": "Simulated side collision"
+  }
+}
