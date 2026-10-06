@@ -16,307 +16,195 @@
 #
 # File: ui/gui.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: 2026-08-16
 
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
 import os
-from typing import Dict, List, Any, Callable, Optional
-from src.core.map_provider import OSMMapProvider
-from ui.map_selector import MapSelectorWindow
-from ui.translator import translator
+import tkinter as tk
+from typing import Any, Callable, Dict, List, Optional
+
 from src.core.logger import logger
+from src.core.map_provider import MapProvider, OSMMapProvider
+from ui.config_builder import SimulationConfigBuilder
+from ui.dialog_service import IDialogService, TkDialogService
+from ui.main_view import MainView
+from ui.translator import translator
+
 
 class DataGeneratorApp(tk.Tk):
     """
-    The main Graphical User Interface (GUI) for the Data Generator.
-    This module handles only the visual components and user inputs.
-    It passes the configuration to the orchestrator via a callback.
+    Main Application Window acting as a pure Facade and Orchestrator.
+    Decouples visual widget rendering (MainView), modal dialogs (TkDialogService),
+    and simulation configuration compilation (SimulationConfigBuilder).
     """
-    def __init__(self, on_generate_callback: Optional[Callable[[Dict[str, Any], Callable[[str], None], Callable[[Exception], None]], None]] = None) -> None:
+
+    def __init__(
+        self,
+        on_generate_callback: Optional[
+            Callable[[Dict[str, Any], Callable[[str], None], Callable[[Exception], None]], None]
+        ] = None,
+        dialog_service: Optional[IDialogService] = None,
+        config_builder: Optional[SimulationConfigBuilder] = None,
+    ) -> None:
         super().__init__()
 
-        self.on_generate_callback: Optional[Callable[[Dict[str, Any], Callable[[str], None], Callable[[Exception], None]], None]] = on_generate_callback
-        
-        # --- State Variables ---
-        self.var_waze: tk.BooleanVar = tk.BooleanVar(value=True)
-        self.var_tomtom: tk.BooleanVar = tk.BooleanVar(value=True)
-        self.var_loop: tk.BooleanVar = tk.BooleanVar(value=True)
-        self.var_camera: tk.BooleanVar = tk.BooleanVar(value=True)
+        self.on_generate_callback = on_generate_callback
+        self.dialog_service: IDialogService = dialog_service if dialog_service is not None else TkDialogService()
+        self.config_builder: SimulationConfigBuilder = (
+            config_builder if config_builder is not None else SimulationConfigBuilder()
+        )
 
-        self.var_gaps: tk.BooleanVar = tk.BooleanVar(value=True)
-        self.var_anomalies: tk.BooleanVar = tk.BooleanVar(value=True)
+        # Initialize and mount visual view
+        self.view = MainView(
+            parent=self,
+            on_select_output_dir=self.select_output_dir,
+            on_select_map_file=self.select_osm_file,
+            on_start_generation=self.start_generation,
+        )
 
-        self.var_duration: tk.IntVar = tk.IntVar(value=1) 
-        self.var_interval: tk.IntVar = tk.IntVar(value=10)
-        self.var_flow_level: tk.StringVar = tk.StringVar(value="Médio") 
-        self.var_slm_mode: tk.StringVar = tk.StringVar(value="Realista")
+    # --- Backwards compatibility variable properties forwarding to view ---
+    @property
+    def var_waze(self) -> tk.BooleanVar:
+        return self.view.var_waze
 
-        self.var_num_cameras: tk.IntVar = tk.IntVar(value=5)
-        self.var_num_loops: tk.IntVar = tk.IntVar(value=5)
-        
-        # Set default output directory
-        default_output: str = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        self.var_output_dir: tk.StringVar = tk.StringVar(value=default_output)
-        
-        self.var_osm_path: tk.StringVar = tk.StringVar(value="")
+    @property
+    def var_tomtom(self) -> tk.BooleanVar:
+        return self.view.var_tomtom
 
-        # Language mapping for the combobox
-        self.lang_map = {
-            "English": "en",
-            "Português (Brasil)": "pt-br",
-            "Français": "fr",
-            "中文 (简体)": "zh-cn",
-            "Русский": "ru",
-            "Español": "es"
-        }
-        self.reverse_lang_map = {v: k for k, v in self.lang_map.items()}
+    @property
+    def var_loop(self) -> tk.BooleanVar:
+        return self.view.var_loop
 
-        # --- GUI Layout ---
-        main_frame = ttk.Frame(self, padding="10")
-        main_frame.pack(fill="both", expand=True)
+    @property
+    def var_camera(self) -> tk.BooleanVar:
+        return self.view.var_camera
 
-        # --- Language Selection ---
-        self.lang_frame = ttk.Frame(main_frame)
-        self.lang_frame.pack(fill="x", pady=(0, 10))
-        self.lbl_lang = ttk.Label(self.lang_frame, text="")
-        self.lbl_lang.pack(side="left", padx=5)
-        
-        self.combo_lang = ttk.Combobox(self.lang_frame, values=list(self.lang_map.keys()), state="readonly")
-        self.combo_lang.pack(side="left")
-        self.combo_lang.bind("<<ComboboxSelected>>", self.on_language_change)
-        
-        # Set default combobox value based on current translator locale
-        self.combo_lang.set(self.reverse_lang_map.get(translator.get_locale(), "English"))
+    @property
+    def var_gaps(self) -> tk.BooleanVar:
+        return self.view.var_gaps
 
-        # --- Section 1: Sources ---
-        self.sources_frame = ttk.LabelFrame(main_frame, padding="10")
-        self.sources_frame.pack(fill="x", expand=True)
-        
-        self.chk_waze = ttk.Checkbutton(self.sources_frame, variable=self.var_waze)
-        self.chk_waze.pack(anchor="w")
-        self.chk_tomtom = ttk.Checkbutton(self.sources_frame, variable=self.var_tomtom)
-        self.chk_tomtom.pack(anchor="w")
-        self.chk_loop = ttk.Checkbutton(self.sources_frame, variable=self.var_loop)
-        self.chk_loop.pack(anchor="w")
-        self.chk_camera = ttk.Checkbutton(self.sources_frame, variable=self.var_camera)
-        self.chk_camera.pack(anchor="w")
+    @property
+    def var_anomalies(self) -> tk.BooleanVar:
+        return self.view.var_anomalies
 
-        # --- Section 2: Problems ---
-        self.problems_frame = ttk.LabelFrame(main_frame, padding="10")
-        self.problems_frame.pack(fill="x", expand=True, pady=5)
-        
-        self.chk_gaps = ttk.Checkbutton(self.problems_frame, variable=self.var_gaps)
-        self.chk_gaps.pack(anchor="w")
-        self.chk_anomalies = ttk.Checkbutton(self.problems_frame, variable=self.var_anomalies)
-        self.chk_anomalies.pack(anchor="w")
+    @property
+    def var_duration(self) -> tk.IntVar:
+        return self.view.var_duration
 
-        # --- Section 3: Settings ---
-        self.config_frame = ttk.LabelFrame(main_frame, padding="10")
-        self.config_frame.pack(fill="x", expand=True, pady=5)
-        
-        # Duration
-        dur_frame = ttk.Frame(self.config_frame)
-        self.lbl_duration = ttk.Label(dur_frame)
-        self.lbl_duration.pack(side="left", padx=5)
-        ttk.Entry(dur_frame, textvariable=self.var_duration, width=10).pack(side="left")
-        dur_frame.pack(anchor="w")
-        
-        # Interval
-        int_frame = ttk.Frame(self.config_frame)
-        self.lbl_interval = ttk.Label(int_frame)
-        self.lbl_interval.pack(side="left", padx=5)
-        ttk.Entry(int_frame, textvariable=self.var_interval, width=10).pack(side="left")
-        int_frame.pack(anchor="w", pady=5)
+    @property
+    def var_interval(self) -> tk.IntVar:
+        return self.view.var_interval
 
-        # Flow Level
-        flow_frame = ttk.Frame(self.config_frame)
-        self.lbl_flow_level = ttk.Label(flow_frame)
-        self.lbl_flow_level.pack(side="left", padx=5)
-        self.rad_flow_small = ttk.Radiobutton(flow_frame, variable=self.var_flow_level, value="Pequeno")
-        self.rad_flow_small.pack(side="left")
-        self.rad_flow_med = ttk.Radiobutton(flow_frame, variable=self.var_flow_level, value="Médio")
-        self.rad_flow_med.pack(side="left")
-        self.rad_flow_large = ttk.Radiobutton(flow_frame, variable=self.var_flow_level, value="Grande")
-        self.rad_flow_large.pack(side="left")
-        self.rad_flow_chaotic = ttk.Radiobutton(flow_frame, variable=self.var_flow_level, value="Caótico")
-        self.rad_flow_chaotic.pack(side="left")
-        flow_frame.pack(anchor="w", pady=5)
-        
-        # SLM Mode
-        slm_frame = ttk.Frame(self.config_frame)
-        self.lbl_slm_mode = ttk.Label(slm_frame)
-        self.lbl_slm_mode.pack(side="left", padx=5)
-        self.rad_slm_ultra = ttk.Radiobutton(slm_frame, variable=self.var_slm_mode, value="Ultrarealista")
-        self.rad_slm_ultra.pack(side="left")
-        self.rad_slm_real = ttk.Radiobutton(slm_frame, variable=self.var_slm_mode, value="Realista")
-        self.rad_slm_real.pack(side="left")
-        self.rad_slm_creative = ttk.Radiobutton(slm_frame, variable=self.var_slm_mode, value="Criativo")
-        self.rad_slm_creative.pack(side="left")
-        slm_frame.pack(anchor="w", pady=5)
-        
-        # Local Sensor Configuration
-        local_sensors_frame = ttk.Frame(self.config_frame)
-        self.lbl_num_cameras = ttk.Label(local_sensors_frame)
-        self.lbl_num_cameras.pack(side="left", padx=5)
-        ttk.Entry(local_sensors_frame, textvariable=self.var_num_cameras, width=5).pack(side="left", padx=5)
-        
-        self.lbl_num_loops = ttk.Label(local_sensors_frame)
-        self.lbl_num_loops.pack(side="left", padx=5)
-        ttk.Entry(local_sensors_frame, textvariable=self.var_num_loops, width=5).pack(side="left", padx=5)
-        local_sensors_frame.pack(anchor="w", pady=5)
+    @property
+    def var_flow_level(self) -> tk.StringVar:
+        return self.view.var_flow_level
 
-        # --- Section 4: Output Folder ---
-        self.output_frame = ttk.LabelFrame(main_frame, padding="10")
-        self.output_frame.pack(fill="x", expand=True, pady=5)
-        
-        self.output_label = ttk.Label(self.output_frame, textvariable=self.var_output_dir, relief="sunken")
-        self.output_label.pack(fill="x", side="left", expand=True, padx=5)
-        self.btn_select_output = ttk.Button(self.output_frame, command=self.select_output_dir)
-        self.btn_select_output.pack(side="left")
+    @property
+    def var_slm_mode(self) -> tk.StringVar:
+        return self.view.var_slm_mode
 
-        # --- Section 4.5: Map File ---
-        self.map_frame = ttk.LabelFrame(main_frame, padding="10")
-        self.map_frame.pack(fill="x", expand=True, pady=5)
-        
-        self.osm_label = ttk.Label(self.map_frame, textvariable=self.var_osm_path, relief="sunken")
-        self.osm_label.pack(fill="x", side="left", expand=True, padx=5)
-        self.btn_browse_osm = ttk.Button(self.map_frame, command=self.select_osm_file)
-        self.btn_browse_osm.pack(side="left")
+    @property
+    def var_num_cameras(self) -> tk.IntVar:
+        return self.view.var_num_cameras
 
-        # --- Section 5: Action ---
-        self.action_button = ttk.Button(main_frame, command=self.start_generation)
-        self.action_button.pack(fill="x", expand=True, ipady=10, pady=10)
+    @property
+    def var_num_loops(self) -> tk.IntVar:
+        return self.view.var_num_loops
 
-        # Apply translations
-        self.update_ui_texts()
+    @property
+    def var_output_dir(self) -> tk.StringVar:
+        return self.view.var_output_dir
 
-    def on_language_change(self, event: Optional[tk.Event] = None) -> None:
-        selected: str = self.combo_lang.get()
-        new_locale: Optional[str] = self.lang_map.get(selected)
-        if new_locale:
-            translator.set_locale(new_locale)
-            self.update_ui_texts()
+    @property
+    def var_output_name(self) -> tk.StringVar:
+        return self.view.var_output_name
+
+    @property
+    def var_osm_path(self) -> tk.StringVar:
+        return self.view.var_osm_path
+
+    @property
+    def action_button(self) -> Any:
+        return self.view.action_button
 
     def update_ui_texts(self) -> None:
-        """Updates all text in the UI dynamically via the Translator."""
-        t: Callable[[str, Any], str] = translator.t
-        self.title(t("app_title"))
-        self.lbl_lang.config(text=t("lang_label"))
-        
-        self.sources_frame.config(text=t("section_sources"))
-        self.chk_waze.config(text=t("waze"))
-        self.chk_tomtom.config(text=t("tomtom"))
-        self.chk_loop.config(text=t("loop"))
-        self.chk_camera.config(text=t("camera"))
-
-        self.problems_frame.config(text=t("section_problems"))
-        self.chk_gaps.config(text=t("gaps"))
-        self.chk_anomalies.config(text=t("anomalies"))
-
-        self.config_frame.config(text=t("section_settings"))
-        self.lbl_duration.config(text=t("duration"))
-        self.lbl_interval.config(text=t("interval"))
-        self.lbl_flow_level.config(text=t("flow_level"))
-        
-        self.rad_flow_small.config(text=t("flow_small"))
-        self.rad_flow_med.config(text=t("flow_medium"))
-        self.rad_flow_large.config(text=t("flow_large"))
-        self.rad_flow_chaotic.config(text=t("flow_chaotic"))
-
-        self.lbl_slm_mode.config(text=t("slm_mode"))
-        self.rad_slm_ultra.config(text=t("slm_ultra"))
-        self.rad_slm_real.config(text=t("slm_real"))
-        self.rad_slm_creative.config(text=t("slm_creative"))
-
-        self.lbl_num_cameras.config(text=t("num_cameras"))
-        self.lbl_num_loops.config(text=t("num_loops"))
-
-        self.output_frame.config(text=t("section_output"))
-        self.btn_select_output.config(text=t("btn_select"))
-
-        self.map_frame.config(text=t("section_map"))
-        self.btn_browse_osm.config(text=t("btn_browse_osm"))
-
-        if str(self.action_button.cget("state")) != "disabled":
-            self.action_button.config(text=t("btn_generate"))
+        """Delegates localization update to view."""
+        self.view.update_ui_texts()
 
     def select_output_dir(self) -> None:
-        directory: str = filedialog.askdirectory(initialdir=self.var_output_dir.get())
+        """Prompts user for output directory and updates state."""
+        directory = self.dialog_service.ask_directory(self.view.var_output_dir.get())
         if directory:
-            self.var_output_dir.set(directory)
-            
+            self.view.var_output_dir.set(directory)
+
     def select_osm_file(self) -> None:
-        filepath: str = filedialog.askopenfilename(
-            title=translator.t("section_map"),
-            filetypes=[("OpenStreetMap", "*.osm"), ("All files", "*.*")]
-        )
+        """Prompts user for map file and updates state."""
+        filepath = self.dialog_service.ask_map_file(translator.t("section_map"))
         if filepath:
-            self.var_osm_path.set(filepath)
+            self.view.var_osm_path.set(filepath)
 
     def start_generation(self) -> None:
-        osm_path: str = self.var_osm_path.get()
+        """Validates map file presence, loads map provider, and launches map selector."""
+        osm_path = self.view.var_osm_path.get()
         if not osm_path or not os.path.exists(osm_path):
-            messagebox.showerror(translator.t("err_title"), translator.t("err_osm_missing"))
+            self.dialog_service.show_error(translator.t("err_title"), translator.t("err_osm_missing"))
             return
 
-        self.action_button.config(text=translator.t("btn_loading_map"), state="disabled")
-        
+        self.view.set_action_state("disabled", "btn_loading_map")
+
         try:
-            # Business logic decoupled: map loading delegated to provider static factory
-            map_provider: OSMMapProvider = OSMMapProvider.load_from_file(osm_path)
+            map_provider: MapProvider = MapProvider.load_from_file(osm_path)
         except ValueError as e:
-            messagebox.showerror(translator.t("err_title"), translator.t("err_osm_failed", str(e)))
-            self.action_button.config(text=translator.t("btn_generate"), state="normal")
+            self.dialog_service.show_error(translator.t("err_title"), translator.t("err_osm_failed", str(e)))
+            self.view.set_action_state("normal", "btn_generate")
             return
-            
-        MapSelectorWindow(
-            self, 
-            map_provider, 
-            self.var_num_cameras.get(), 
-            self.var_num_loops.get(),
-            lambda cams, loops: self._continue_generation_after_map(cams, loops, map_provider)
+
+        self.dialog_service.open_map_selector(
+            parent=self,
+            map_provider=map_provider,
+            num_cameras=self.view.var_num_cameras.get(),
+            num_loops=self.view.var_num_loops.get(),
+            on_complete=lambda cams, loops: self._continue_generation_after_map(cams, loops, map_provider),
         )
 
-    def _continue_generation_after_map(self, cameras: Optional[List[Dict[str, float]]], loops: Optional[List[Dict[str, float]]], map_provider: OSMMapProvider) -> None:
+    def _continue_generation_after_map(
+        self,
+        cameras: Optional[List[Dict[str, float]]],
+        loops: Optional[List[Dict[str, float]]],
+        map_provider: MapProvider,
+    ) -> None:
+        """Callback receiving sensor positions and launching simulation generation."""
         if cameras is None or loops is None:
-            self.action_button.config(text=translator.t("btn_generate"), state="normal")
+            self.view.set_action_state("normal", "btn_generate")
             return
-            
-        self.action_button.config(text=translator.t("btn_generating"), state="disabled")
-        
-        base_output_dir: str = self.var_output_dir.get()
-        final_output_dir: str = os.path.join(base_output_dir, "output")
 
-        config: Dict[str, Any] = {
-            "sources": {
-                "waze": self.var_waze.get(),
-                "tomtom": self.var_tomtom.get(),
-                "loop": self.var_loop.get(),
-                "camera": self.var_camera.get(),
-            },
-            "problems": {
-                "gaps": self.var_gaps.get(),
-                "anomalies": self.var_anomalies.get(),
-            },
-            "simulation": {
-                "duration_days": self.var_duration.get(),
-                "interval_seconds": self.var_interval.get(),
-                "flow_level": self.var_flow_level.get(),
-                "slm_mode": self.var_slm_mode.get(),
-                "num_cameras": self.var_num_cameras.get(),
-                "num_loops": self.var_num_loops.get()
-            },
-            "map": {
-                "bounds": map_provider.get_bounds(),
-                "provider": map_provider,
-                "local_points": {
-                    "cameras": cameras,
-                    "loops": loops
-                }
-            },
-            "output_directory": final_output_dir 
+        self.view.set_action_state("disabled", "btn_generating")
+
+        sources = {
+            "waze": self.view.var_waze.get(),
+            "tomtom": self.view.var_tomtom.get(),
+            "loop": self.view.var_loop.get(),
+            "camera": self.view.var_camera.get(),
         }
+        problems = {
+            "gaps": self.view.var_gaps.get(),
+            "anomalies": self.view.var_anomalies.get(),
+        }
+
+        config = self.config_builder.build(
+            sources=sources,
+            problems=problems,
+            duration_days=self.view.var_duration.get(),
+            interval_seconds=self.view.var_interval.get(),
+            flow_level=self.view.var_flow_level.get(),
+            slm_mode=self.view.var_slm_mode.get(),
+            num_cameras=self.view.var_num_cameras.get(),
+            num_loops=self.view.var_num_loops.get(),
+            base_output_dir=self.view.var_output_dir.get(),
+            folder_name=self.view.var_output_name.get(),
+            map_provider=map_provider,
+            cameras=cameras,
+            loops=loops,
+        )
 
         if self.on_generate_callback:
             self.on_generate_callback(config, self.handle_success, self.handle_error)
@@ -324,16 +212,22 @@ class DataGeneratorApp(tk.Tk):
             self.handle_error(ValueError("No generation callback provided!"))
 
     def handle_success(self, final_output_dir: str) -> None:
+        """Thread-safe success handler dispatching to main thread."""
         self.after(0, self._on_generation_complete, final_output_dir)
 
     def handle_error(self, error: Exception) -> None:
+        """Thread-safe error handler dispatching to main thread."""
         self.after(0, self._on_generation_error, error)
 
     def _on_generation_complete(self, final_output_dir: str) -> None:
-        messagebox.showinfo(translator.t("success_title"), translator.t("success_msg", final_output_dir))
-        self.action_button.config(text=translator.t("btn_generate"), state="normal")
+        self.dialog_service.show_info(
+            translator.t("success_title"), translator.t("success_msg", final_output_dir)
+        )
+        self.view.set_action_state("normal", "btn_generate")
 
     def _on_generation_error(self, error: Exception) -> None:
         logger.error(f"Simulation error: {str(error)}")
-        messagebox.showerror(translator.t("err_title"), translator.t("err_generation", str(error)))
-        self.action_button.config(text=translator.t("btn_generate"), state="normal")
+        self.dialog_service.show_error(
+            translator.t("err_title"), translator.t("err_generation", str(error))
+        )
+        self.view.set_action_state("normal", "btn_generate")

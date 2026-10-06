@@ -16,5 +16,20 @@
 #
 # File: models/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: 2026-10-06
 
+from src.models.st_gatv2 import STGATv2, Time2Vec
+from src.models.pinn import PINN, PINNCorrector
+from src.models.diffusion import Diffusion, GraphDiffusion, SinusoidalPosEmb
+from src.models.gatv2 import LightweightGATv2
+
+__all__ = [
+    "STGATv2",
+    "Time2Vec",
+    "PINN",
+    "PINNCorrector",
+    "Diffusion",
+    "GraphDiffusion",
+    "SinusoidalPosEmb",
+    "LightweightGATv2",
+]

@@ -1,4 +1,95 @@
 {
+  "transitions_weighted": {
+    "Sunny": {
+      "Sunny": 50,
+      "Partly Cloudy": 35,
+      "Hazy": 10,
+      "Overcast": 5
+    },
+    "Partly Cloudy": {
+      "Sunny": 35,
+      "Partly Cloudy": 35,
+      "Cloudy": 20,
+      "Overcast": 10
+    },
+    "Cloudy": {
+      "Partly Cloudy": 25,
+      "Cloudy": 35,
+      "Overcast": 25,
+      "Drizzle": 10,
+      "Fog": 5
+    },
+    "Overcast": {
+      "Cloudy": 20,
+      "Overcast": 35,
+      "Drizzle": 20,
+      "Rain": 15,
+      "Sunny": 10
+    },
+    "Fog": {
+      "Cloudy": 40,
+      "Partly Cloudy": 30,
+      "Drizzle": 20,
+      "Fog": 10
+    },
+    "Drizzle": {
+      "Overcast": 30,
+      "Rain": 30,
+      "Drizzle": 25,
+      "Cloudy": 15
+    },
+    "Rain": {
+      "Rain": 35,
+      "Drizzle": 30,
+      "Overcast": 20,
+      "Heavy Rain": 10,
+      "Thunderstorm": 5
+    },
+    "Heavy Rain": {
+      "Rain": 50,
+      "Thunderstorm": 25,
+      "Heavy Rain": 15,
+      "Drizzle": 10
+    },
+    "Thunderstorm": {
+      "Rain": 45,
+      "Heavy Rain": 30,
+      "Hail": 10,
+      "Thunderstorm": 10,
+      "Overcast": 5
+    },
+    "Hail": {
+      "Thunderstorm": 40,
+      "Rain": 40,
+      "Heavy Rain": 20
+    },
+    "Snow": {
+      "Snow": 45,
+      "Overcast": 25,
+      "Heavy Snow": 20,
+      "Freezing Rain": 10
+    },
+    "Heavy Snow": {
+      "Snow": 50,
+      "Blizzard": 30,
+      "Heavy Snow": 20
+    },
+    "Blizzard": {
+      "Heavy Snow": 60,
+      "Snow": 30,
+      "Blizzard": 10
+    },
+    "Freezing Rain": {
+      "Snow": 40,
+      "Rain": 35,
+      "Overcast": 25
+    },
+    "Hazy": {
+      "Sunny": 50,
+      "Partly Cloudy": 35,
+      "Hazy": 15
+    }
+  },
   "transitions": {
     "Sunny": ["Sunny", "Partly Cloudy", "Hazy", "Overcast"],
     "Partly Cloudy": ["Sunny", "Partly Cloudy", "Overcast", "Cloudy"],

@@ -7,6 +7,10 @@ optuna
 torch
 torchvision
 llama-cpp-python
+nvidia-cuda-runtime-cu12
+nvidia-cublas-cu12
 tkintermapview
 haversine
 torch_geometric
+psutil
+pyproj

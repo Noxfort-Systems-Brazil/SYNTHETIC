@@ -16,195 +16,135 @@
 #
 # File: core/map_provider.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: 2026-08-16
 
+import os
 import xml.etree.ElementTree as ET
-from haversine import haversine
+from typing import Dict, List, Optional, Set, Tuple
+
 import numpy as np
-import math
-from typing import Dict, List, Set, Tuple, Optional
+
 from src.core.logger import logger
+from src.core.map_topology import MapTopology
+from src.parsers.factory import MapParserFactory, default_parser_factory
+from src.services.graph_converter import GATv2GraphConverter
+from src.services.spatial_service import SpatialService
 
-class OSMMapProvider:
-    def __init__(self) -> None:
-        self.nodes: Dict[str, Tuple[float, float]] = {} # {id: (lat, lon)}
-        self.ways: List[List[str]] = [] # list of lists of node IDs
-        self.road_nodes: Set[str] = set()
-        self.bounds: Optional[Tuple[float, float, float, float]] = None # (min_lat, min_lon, max_lat, max_lon)
 
-    @staticmethod
-    def load_from_file(filepath: str) -> "OSMMapProvider":
+class MapProvider:
+    """
+    Universal Map Provider acting as a pure Facade and Orchestrator.
+    Coordinates map file parsing (OSM / SUMO Net), spatial geometry calculations,
+    and GNN graph feature extraction while adhering strictly to SOLID principles.
+    """
+
+    def __init__(
+        self,
+        topology: Optional[MapTopology] = None,
+        parser_factory: Optional[MapParserFactory] = None,
+        spatial_service: Optional[SpatialService] = None,
+        graph_converter: Optional[GATv2GraphConverter] = None,
+    ) -> None:
+        self.topology: MapTopology = topology if topology is not None else MapTopology()
+        self.parser_factory: MapParserFactory = parser_factory if parser_factory is not None else default_parser_factory
+        self.spatial_service: SpatialService = spatial_service if spatial_service is not None else SpatialService()
+        self.graph_converter: GATv2GraphConverter = graph_converter if graph_converter is not None else GATv2GraphConverter()
+
+    @property
+    def nodes(self) -> Dict[str, Tuple[float, float]]:
+        """Dictionary of {node_id: (lat, lon)}."""
+        return self.topology.nodes
+
+    @nodes.setter
+    def nodes(self, value: Dict[str, Tuple[float, float]]) -> None:
+        self.topology.nodes = value
+
+    @property
+    def ways(self) -> List[List[str]]:
+        """List of node ID sequences representing road ways."""
+        return self.topology.ways
+
+    @ways.setter
+    def ways(self, value: List[List[str]]) -> None:
+        self.topology.ways = value
+
+    @property
+    def road_nodes(self) -> Set[str]:
+        """Set of node IDs associated with navigable road ways."""
+        return self.topology.road_nodes
+
+    @road_nodes.setter
+    def road_nodes(self, value: Set[str]) -> None:
+        self.topology.road_nodes = value
+
+    @property
+    def bounds(self) -> Optional[Tuple[float, float, float, float]]:
+        """Geographic bounds (min_lat, min_lon, max_lat, max_lon)."""
+        return self.topology.bounds
+
+    @bounds.setter
+    def bounds(self, value: Optional[Tuple[float, float, float, float]]) -> None:
+        self.topology.bounds = value
+
+    @classmethod
+    def load_from_file(cls, filepath: str, parser_factory: Optional[MapParserFactory] = None) -> "MapProvider":
         """
-        Factory method to load and parse an OSM file.
-        Wraps XML parsing exceptions with clear domain logging.
+        Factory method to load and parse any supported map format (.osm, .osm.gz, .net.xml, .net.xml.gz).
+        Wraps parsing exceptions with clear domain logging and error boundaries.
         """
-        logger.info(f"Loading OSM map from file: {filepath}")
-        provider = OSMMapProvider()
+        logger.info(f"Loading map from file: {filepath}")
+        if not os.path.exists(filepath):
+            logger.error(f"Map file not found at '{filepath}'")
+            raise FileNotFoundError(f"Map file not found: '{filepath}'")
+
+        provider = cls(parser_factory=parser_factory)
         try:
-            provider.parse_osm_file(filepath)
-            logger.info(f"Successfully loaded OSM Map. Nodes: {len(provider.nodes)}, Ways: {len(provider.ways)}")
+            provider.parse_file(filepath)
+            logger.info(
+                f"Successfully loaded Map ({os.path.basename(filepath)}). "
+                f"Nodes: {len(provider.nodes)}, Ways: {len(provider.ways)}, "
+                f"Bounds: {provider.bounds}"
+            )
             return provider
-        except (ET.ParseError, FileNotFoundError, PermissionError) as e:
-            logger.error(f"Failed to parse OSM map file '{filepath}': {str(e)}")
-            raise ValueError(f"Invalid OSM file or path: {str(e)}") from e
+        except (ET.ParseError, FileNotFoundError, PermissionError, ValueError) as e:
+            logger.error(f"Failed to parse map file '{filepath}': {str(e)}")
+            raise ValueError(f"Invalid map file or path: {str(e)}") from e
+
+    def parse_file(self, filepath: str) -> None:
+        """
+        Delegates map parsing to the matching parser registered in the factory.
+        """
+        parser = self.parser_factory.get_parser(filepath)
+        parser.parse(filepath, self.topology)
 
     def parse_osm_file(self, filepath: str) -> None:
-        """Parses the OSM file to extract bounds, nodes, and highway ways."""
-        tree = ET.parse(filepath)
-        root = tree.getroot()
-        
-        # Extract bounds
-        bounds_tag = root.find('bounds')
-        if bounds_tag is not None:
-            self.bounds = (
-                float(bounds_tag.attrib['minlat']),
-                float(bounds_tag.attrib['minlon']),
-                float(bounds_tag.attrib['maxlat']),
-                float(bounds_tag.attrib['maxlon'])
-            )
-        
-        # Extract all nodes
-        min_lat, min_lon = float('inf'), float('inf')
-        max_lat, max_lon = float('-inf'), float('-inf')
-        
-        for node in root.findall('node'):
-            node_id = node.attrib['id']
-            lat = float(node.attrib['lat'])
-            lon = float(node.attrib['lon'])
-            self.nodes[node_id] = (lat, lon)
-            
-            # If bounds tag is missing, we calculate it
-            if self.bounds is None:
-                min_lat = min(min_lat, lat)
-                min_lon = min(min_lon, lon)
-                max_lat = max(max_lat, lat)
-                max_lon = max(max_lon, lon)
-        
-        if self.bounds is None and self.nodes:
-            self.bounds = (min_lat, min_lon, max_lat, max_lon)
-            
-        # Extract ways (only highways)
-        for way in root.findall('way'):
-            is_highway = False
-            for tag in way.findall('tag'):
-                if tag.attrib['k'] == 'highway':
-                    is_highway = True
-                    break
-            
-            if is_highway:
-                way_nodes = [nd.attrib['ref'] for nd in way.findall('nd')]
-                self.ways.append(way_nodes)
-                for nd in way_nodes:
-                    self.road_nodes.add(nd)
+        """Backwards-compatible wrapper for loading an OSM file."""
+        self.parse_file(filepath)
+
+    def parse_sumo_net_file(self, filepath: str) -> None:
+        """Backwards-compatible wrapper for loading a SUMO network file."""
+        self.parse_file(filepath)
 
     def get_bounds(self) -> Optional[Tuple[float, float, float, float]]:
+        """Returns (min_lat, min_lon, max_lat, max_lon)."""
         return self.bounds
-        
-    def snap_to_road(self, lat: float, lon: float) -> Tuple[float, float]:
-        """Finds the closest point on any road segment to the given coordinates."""
-        if not self.ways:
-            return lat, lon # Fallback
-            
-        min_dist: float = float('inf')
-        best_point: Tuple[float, float] = (lat, lon)
-        
-        # Approximate local flat distance considering Earth curvature at this latitude
-        lat_rad: float = math.radians(lat)
-        lon_scale: float = math.cos(lat_rad)
-        
-        def dist_squared(p1: Tuple[float, float], p2: Tuple[float, float]) -> float:
-            dy: float = p1[0] - p2[0]
-            dx: float = (p1[1] - p2[1]) * lon_scale
-            return dy**2 + dx**2
-            
-        def closest_point_on_segment(p: Tuple[float, float], a: Tuple[float, float], b: Tuple[float, float]) -> Tuple[float, float]:
-            dy_ab: float = b[0] - a[0]
-            dx_ab: float = (b[1] - a[1]) * lon_scale
-            ab_len_sq: float = dy_ab**2 + dx_ab**2
-            
-            if ab_len_sq == 0:
-                return a
-                
-            dy_ap: float = p[0] - a[0]
-            dx_ap: float = (p[1] - a[1]) * lon_scale
-            
-            t: float = (dy_ap * dy_ab + dx_ap * dx_ab) / ab_len_sq
-            t = max(0.0, min(1.0, t)) # Clamp to segment limits
-            
-            return (a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1]))
 
-        for way in self.ways:
-            for i in range(len(way) - 1):
-                n1, n2 = way[i], way[i+1]
-                if n1 in self.nodes and n2 in self.nodes:
-                    p1 = self.nodes[n1]
-                    p2 = self.nodes[n2]
-                    
-                    proj_p = closest_point_on_segment((lat, lon), p1, p2)
-                    d_sq = dist_squared((lat, lon), proj_p)
-                    
-                    if d_sq < min_dist:
-                        min_dist = d_sq
-                        best_point = proj_p
-                        
-        return best_point
+    def snap_to_road(self, lat: float, lon: float) -> Tuple[float, float]:
+        """
+        Delegates point-to-road snapping calculations to the SpatialService.
+        """
+        return self.spatial_service.snap_to_road(lat, lon, self.topology)
+
+    def parse_to_graph(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Delegates graph tensor conversion to the GATv2GraphConverter.
+        """
+        return self.graph_converter.convert(self.topology)
 
     def parse_osm_to_graph(self) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Converts the parsed OSM data into Node Features and Edge Index for GATv2.
-        Returns:
-            node_features: np.array of shape (num_nodes, feature_dim)
-            edge_index: np.array of shape (2, num_edges)
-        """
-        if not self.road_nodes:
-            return np.array([]), np.array([[], []])
-            
-        # Create a mapping from OSM node ID to a continuous integer index 0...N-1
-        node_to_idx: Dict[str, int] = {}
-        idx: int = 0
-        for node_id in self.road_nodes:
-            if node_id in self.nodes:
-                node_to_idx[node_id] = idx
-                idx += 1
-                
-        num_nodes: int = idx
-        node_features: np.ndarray = np.zeros((num_nodes, 2), dtype=np.float32) # Features: [lat, lon]
-        
-        for node_id, node_idx in node_to_idx.items():
-            node_features[node_idx] = self.nodes[node_id]
-            
-        # Normalize features (Optional, but good for GNNs)
-        # We can center the coordinates around the mean
-        if num_nodes > 0:
-            mean_lat: float = float(np.mean(node_features[:, 0]))
-            mean_lon: float = float(np.mean(node_features[:, 1]))
-            node_features[:, 0] -= mean_lat
-            node_features[:, 1] -= mean_lon
-            # Scale
-            max_val: float = float(np.max(np.abs(node_features)))
-            if max_val > 0:
-                node_features /= max_val
-            
-        # Build Edge Index
-        src: List[int] = []
-        dst: List[int] = []
-        
-        for way in self.ways:
-            # Connect sequential nodes in the way
-            for i in range(len(way) - 1):
-                u = way[i]
-                v = way[i+1]
-                
-                if u in node_to_idx and v in node_to_idx:
-                    u_idx = node_to_idx[u]
-                    v_idx = node_to_idx[v]
-                    
-                    # Assume undirected graph for road topology simplicity 
-                    # (we can parse one-way tags later if needed)
-                    src.append(u_idx)
-                    dst.append(v_idx)
-                    src.append(v_idx)
-                    dst.append(u_idx)
-                    
-        edge_index: np.ndarray = np.array([src, dst], dtype=np.int64)
-        return node_features, edge_index
+        """Backwards-compatible alias for GATv2 context extraction."""
+        return self.parse_to_graph()
+
+
+# Backwards compatibility alias
+OSMMapProvider = MapProvider

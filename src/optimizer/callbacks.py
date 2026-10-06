@@ -92,3 +92,33 @@ class EarlyStopping:
             # Loss improved
             self.best_score = current_loss
             self.counter = 0
+
+class StudyEarlyStoppingCallback:
+    """
+    Early stopping callback for Optuna Studies.
+    Stops the entire study if the best value hasn't improved significantly.
+    """
+    def __init__(self, patience: int = 3, min_delta: float = 0.01):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.counter = 0
+        self.best_value = None
+
+    def __call__(self, study: optuna.study.Study, trial: optuna.trial.FrozenTrial) -> None:
+        try:
+            current_best = study.best_value
+        except ValueError:
+            # No completed trials yet
+            return
+
+        if self.best_value is None:
+            self.best_value = current_best
+        elif current_best < self.best_value - self.min_delta:
+            # Significant improvement
+            self.best_value = current_best
+            self.counter = 0
+        else:
+            self.counter += 1
+            if self.counter >= self.patience:
+                print(f"[AutoML] Stopping study early! No significant improvement (>{self.min_delta}) for {self.patience} trials.")
+                study.stop()

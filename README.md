@@ -9,10 +9,17 @@
 [![Optuna](https://img.shields.io/badge/Optuna-blue?style=flat)](https://optuna.org/)
 [![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-FFD21E.svg?color=FFD21E)](https://huggingface.co/)
 [![CustomTkinter](https://img.shields.io/badge/UI-CustomTkinter-blue)](https://github.com/TomSchimansky/CustomTkinter)
+[![Tests](https://img.shields.io/badge/Tests-99%20Passed-brightgreen?style=flat&logo=pytest)](docs/testing.md)
+[![Coverage](https://img.shields.io/badge/Coverage-86%25-brightgreen?style=flat)](docs/testing.md)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue?style=flat&logo=githubactions)](docs/ci_cd.md)
 
 </div>
 
 **An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis**
+
+---
+
+🌐 **Documentation Hub & Languages:** **[🇺🇸 English](docs/en/README.md)** • **[🇧🇷 Português (Brasil)](docs/pt-br/README.md)** • **[🇫🇷 Français](docs/fr/README.md)** • **[🇪🇸 Español](docs/es/README.md)** • **[🇷🇺 Русский](docs/ru/README.md)** • **[🇨🇳 简体中文](docs/zh/README.md)** • **[📚 Full Documentation Portal](docs/README.md)**
 
 ---
 
@@ -102,14 +109,19 @@ SYNTHETIC operates through a highly specialized intelligence system divided into
 | Screenwriter Agent | Generates macro-level narrative context for each simulation day | Phi-4-mini GGUF   |
 | Maestro            | Central orchestration, threading, and resource management    | Python Native     |
 
-### 3. Physics Layer
+### 3. Physics & Neural Architecture Layer
 
-| Component      | Function                                                     | Technology        |
-| -------------- | ------------------------------------------------------------ | ----------------- |
-| GATv2          | Extracts spatial nodes/edges from `.osm` to bound generation | PyTorch Geometric |
-| Director Agent | Validates physics and enforces hard speed clamps (20-110 km/h) | VAE-TCN + PyTorch |
-| CSDI Engine    | Generates realistic flow and speed matrices                  | Diffusion Models  |
-| HyperTuner     | Just-in-time AutoML optimization                             | Optuna            |
+| Component          | Function                                                     | Technology           |
+| ------------------ | ------------------------------------------------------------ | -------------------- |
+| Godunov Solver     | Riemann solver for Lighthill-Whitham-Richards (LWR) PDE      | Numerical Physics    |
+| Greenshields Model | Fundamental density-speed-flux relationship (\(q = \rho v\)) | Hydrodynamic Traffic |
+| Shockwave Analyzer | Rankine-Hugoniot jump condition (\(u_s = \Delta q / \Delta \rho\)) | Characteristic Waves |
+| Signal Controller  | Demand-responsive actuated phase gating at intersections     | Discrete Automata    |
+| ST-GATv2           | Spatio-Temporal Graph Attention with Time2Vec & tidal bias   | PyTorch Geometric    |
+| Director Agent     | Validates physics and enforces hard speed clamps (20-110 km/h) | VAE-TCN + PyTorch    |
+| CSDI Engine        | Generates realistic flow and speed matrices                  | Diffusion Models     |
+| PINN Regularizer   | Residual loss enforcing continuity and momentum equations    | PyTorch              |
+| HyperTuner         | Just-in-time AutoML optimization                             | Optuna               |
 
 ### 4. Corruption & Output Layer
 
@@ -228,6 +240,21 @@ SYNTHETIC utilizes a robust, map-integrated UI localized in PT-BR:
 4. Click **SELECIONAR NO MAPA** to open the interactive map view.
 5. Click directly on the map to place your requested Sensors (Cameras/Loops).
 6. Confirm selection to begin the AI orchestration background loop.
+
+### Testing & Verification
+
+SYNTHETIC comes with an enterprise test suite covering 86% of the codebase across UI, neural backends, and hydrodynamic physics solvers:
+
+```bash
+# Install development and testing dependencies
+pip install -r requirements-dev.txt
+
+# Run complete test suite (99 automated tests) with statement coverage
+pytest -v --cov=src --cov=ui --cov=main tests/
+
+# Build documentation in strict mode
+mkdocs build --strict
+```
 
 ---
 

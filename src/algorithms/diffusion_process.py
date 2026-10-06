@@ -68,47 +68,88 @@ class DiffusionSampler:
 
         return loss
 
-    @torch.no_grad()
-    def generate(self, cond: torch.Tensor, gat_cond: torch.Tensor, seq_len: int, n_steps: int = None, seed_tail: torch.Tensor = None, seed_alpha: float = 0.6) -> torch.Tensor:
+    def generate(
+        self,
+        cond: torch.Tensor,
+        gat_cond: torch.Tensor,
+        seq_len: int,
+        n_steps: int = None,
+        seed_tail: torch.Tensor = None,
+        seed_alpha: float = 0.6,
+        physics_guidance: bool = True,
+        guidance_scale: float = 0.15,
+    ) -> torch.Tensor:
         """
         Generates time-series data from pure Gaussian noise via iterative denoising.
-        Supports inter-day context seeding.
+        Supports inter-day context seeding and Physics-Guided Diffusion (PGDM) steering.
         """
         steps = n_steps or self.diffusion_steps
         batch_size = cond.shape[0]
 
-        # Start from pure noise
-        x = torch.randn(batch_size, self.model.n_features, seq_len, device=cond.device)
+        with torch.no_grad():
+            # Start from pure noise
+            x = torch.randn(batch_size, self.model.n_features, seq_len, device=cond.device)
 
-        # Context Seeding: inject previous day's tail into the noise
-        if seed_tail is not None:
-            tail_len = min(seed_tail.shape[-1], seq_len)
-            noise_scale = self.sqrt_one_minus_alphas_cumprod[-1]
-            noisy_tail = seed_tail[:, :, -tail_len:] + noise_scale * torch.randn_like(seed_tail[:, :, -tail_len:])
-            x[:, :, :tail_len] = (seed_alpha * noisy_tail + (1 - seed_alpha) * x[:, :, :tail_len])
-            # print(f"[DiffusionSampler] Context seeding: injecting {tail_len} steps from previous day (alpha={seed_alpha})")
+            # Context Seeding: inject previous day's tail into the noise
+            if seed_tail is not None:
+                seed_tail = seed_tail.to(cond.device)
+                tail_len = min(seed_tail.shape[-1], seq_len)
+                noise_scale = self.sqrt_one_minus_alphas_cumprod[-1]
+                noisy_tail = seed_tail[:, :, -tail_len:] + noise_scale * torch.randn_like(seed_tail[:, :, -tail_len:])
+                x[:, :, :tail_len] = (seed_alpha * noisy_tail + (1 - seed_alpha) * x[:, :, :tail_len])
 
-        for i in reversed(range(steps)):
-            t = torch.full((batch_size,), i, dtype=torch.long, device=cond.device)
+            for i in reversed(range(steps)):
+                t = torch.full((batch_size,), i, dtype=torch.long, device=cond.device)
 
-            # Predict noise
-            device_type = 'cuda' if x.is_cuda else 'cpu'
-            with torch.autocast(device_type=device_type, enabled=(device_type == 'cuda')):
-                noise_pred = self.model(x, cond, gat_cond, t)
+                # Predict noise
+                device_type = 'cuda' if x.is_cuda else 'cpu'
+                with torch.autocast(device_type=device_type, enabled=(device_type == 'cuda')):
+                    noise_pred = self.model(x, cond, gat_cond, t)
 
-            # DDPM update rule
-            alpha_t = self.alphas[i]
-            alpha_bar_t = self.alphas_cumprod[i]
-            beta_t = self.betas[i]
+                # DDPM update rule
+                alpha_t = self.alphas[i]
+                alpha_bar_t = self.alphas_cumprod[i]
+                beta_t = self.betas[i]
 
-            coeff = beta_t / torch.sqrt(1.0 - alpha_bar_t)
-            mu = (1.0 / torch.sqrt(alpha_t)) * (x - coeff * noise_pred)
+                coeff = beta_t / torch.sqrt(1.0 - alpha_bar_t)
+                mu = (1.0 / torch.sqrt(alpha_t)) * (x - coeff * noise_pred)
 
-            # Add noise for all steps except the last
-            if i > 0:
-                sigma = torch.sqrt(beta_t)
-                x = mu + sigma * torch.randn_like(x)
-            else:
-                x = mu
+                # Physics Guidance (PGDM): Steer reverse sampling using LWR / Greenshields gradients
+                if physics_guidance and guidance_scale > 0.0 and self.model.n_features >= 2:
+                    with torch.enable_grad():
+                        # Tweedie's formula estimate for clean state x_0
+                        x_0_hat = (x - torch.sqrt(1.0 - alpha_bar_t) * noise_pred) / torch.sqrt(alpha_bar_t)
+                        x_0_hat = x_0_hat.detach().requires_grad_(True)
 
-        return x
+                        flow = x_0_hat[:, 0, :]
+                        speed = x_0_hat[:, 1, :]
+
+                        # 1. Non-negativity / bounding loss
+                        loss_neg = torch.mean(F.relu(-flow).pow(2) + F.relu(-speed - 1.0).pow(2))
+
+                        # 2. Greenshields negative correlation in normalized diffusion space
+                        expected_speed = -0.5 * flow
+                        loss_greenshields = F.mse_loss(speed, expected_speed)
+
+                        # 3. Jerk/Smoothness constraint
+                        if speed.shape[-1] > 2:
+                            jerk = speed[:, 2:] - 2 * speed[:, 1:-1] + speed[:, :-2]
+                            loss_jerk = torch.mean(jerk.pow(2))
+                        else:
+                            loss_jerk = torch.tensor(0.0, device=x.device)
+
+                        physics_loss = loss_greenshields + 0.3 * loss_jerk + loss_neg
+                        grad_phy = torch.autograd.grad(physics_loss, x_0_hat)[0]
+
+                    # Steer mean using physics gradient
+                    step_guidance = guidance_scale * beta_t
+                    mu = mu - step_guidance * grad_phy.detach()
+
+                # Add noise for all steps except the last
+                if i > 0:
+                    sigma = torch.sqrt(beta_t)
+                    x = mu + sigma * torch.randn_like(x)
+                else:
+                    x = mu
+
+            return x

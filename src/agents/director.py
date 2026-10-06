@@ -94,17 +94,24 @@ class DirectorAgent:
         current_dream_hash = self.physics.hash_properties(properties)
         
         if self.temporal_ctx.check_shift(current_dream_hash):
-            logger.info(f"[Director] Semantic shift detected. Retuning VAE-TCN and CSDI...")
+            logger.info(f"[Director] Semantic shift detected. Retuning PI-VAE and CSDI with DeepONet Prior...")
             
             # Release old models before tuning
             self.model_manager.release_guardian()
             self.model_manager.release_csdi()
             
+            cond_tensor = torch.tensor(clean_vector, dtype=torch.float32).unsqueeze(0).to(self.device)
+            gat_cond = graph_embedding.to(self.device) if graph_embedding is not None else torch.zeros((1, 32), dtype=torch.float32, device=self.device)
+
+            # Generate reference signal backed by PI-DeepONet
+            deeponet = self.model_manager.ensure_deeponet()
             reference_data = self.physics.generate_reference_signal(
-                properties, duration_steps, self.temporal_ctx.tail_context_len, self.device
+                properties, duration_steps, self.temporal_ctx.tail_context_len, self.device,
+                deeponet=deeponet, cond_tensor=cond_tensor, gat_emb=gat_cond
             )
+            self.model_manager.release_deeponet()
             
-            # Tune VAE-TCN
+            # Tune PI-VAE Guardian
             best_params_vae = self.tuner.optimize(reference_data)
             n_tcn_layers = int(best_params_vae['n_tcn_layers'])
             tcn_base_channels = int(best_params_vae['tcn_base_channels'])
@@ -112,14 +119,11 @@ class DirectorAgent:
             self.model_manager.update_guardian_params({
                 'seq_len': reference_data.shape[2],
                 'tcn_channels': [tcn_base_channels * (2 ** i) for i in range(n_tcn_layers)],
-                'latent_dim': best_params_vae['latent_dim'],
+                'latent_dim': best_params_vae.get('latent_dim', 2048),
                 'dropout': best_params_vae['dropout'],
             })
             
             # Tune CSDI
-            cond_tensor = torch.tensor(clean_vector, dtype=torch.float32).unsqueeze(0).to(self.device)
-            gat_cond = graph_embedding.to(self.device) if graph_embedding is not None else torch.zeros((1, 32), dtype=torch.float32, device=self.device)
-            
             best_params_csdi = self.tuner.optimize_csdi(reference_data, cond_tensor, gat_cond)
             self.model_manager.update_csdi_params(best_params_csdi)
             
@@ -132,23 +136,24 @@ class DirectorAgent:
         del blended_tensor, clean_mu
         
         # ──────────────────────────────────────────────────────────────
-        # PHASE B: CSDI (Load → Generate with context seeding → Release)
+        # PHASE B: CSDI (Load → Generate with PGDM physics guidance → Release)
         # ──────────────────────────────────────────────────────────────
         csdi = self.model_manager.ensure_csdi()
         
         cond_tensor = torch.tensor(clean_vector, dtype=torch.float32).unsqueeze(0).to(self.device)
         gat_cond = graph_embedding.to(self.device) if graph_embedding is not None else torch.zeros((1, 32), dtype=torch.float32, device=self.device)
         
-        with torch.no_grad():
-            sampler = DiffusionSampler(csdi, diffusion_steps=csdi.diffusion_steps)
-            raw_output = sampler.generate(
-                cond_tensor,
-                gat_cond=gat_cond,
-                seq_len=duration_steps,
-                seed_tail=self.temporal_ctx.last_day_tail
-            )
-            self.temporal_ctx.update_day_tail(raw_output)
-            raw_output_np = raw_output.squeeze(0).permute(1, 0).cpu().numpy()
+        sampler = DiffusionSampler(csdi, diffusion_steps=csdi.diffusion_steps)
+        raw_output = sampler.generate(
+            cond_tensor,
+            gat_cond=gat_cond,
+            seq_len=duration_steps,
+            seed_tail=self.temporal_ctx.last_day_tail,
+            physics_guidance=True,
+            guidance_scale=0.15
+        )
+        self.temporal_ctx.update_day_tail(raw_output)
+        raw_output_np = raw_output.squeeze(0).permute(1, 0).cpu().numpy()
         
         # Release CSDI
         self.model_manager.release_csdi()

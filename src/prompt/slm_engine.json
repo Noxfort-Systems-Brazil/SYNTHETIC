@@ -1,0 +1,26 @@
+{
+  "model_config": {
+    "default_model_relative_path": ["models", "vault", "Phi-4-mini-reasoning-UD-Q6_K_XL.gguf"],
+    "n_ctx": 8192,
+    "n_gpu_layers": 0,
+    "temperature": 0.85,
+    "max_tokens": 1024,
+    "latent_dim": 2048,
+    "verbose": false,
+    "embedding": true
+  },
+  "telemetry": {
+    "log_filename": "synthetic_slm.log",
+    "interval_sec": 2
+  },
+  "prompts": {
+    "cognitive_directive": "[CRITICAL DIRECTIVE]: You are in THINKING MODE. Before providing the final scenario, you MUST open a <think> tag and write out your step-by-step logical reasoning about the weather, traffic density, and physical constraints of the requested situation. IMPORTANT: Base your reasoning on real-world urban traffic dynamics. Remember that the core behavior of traffic is universal across small, medium, and large cities—what changes is the intensity and duration. Traffic is highly temporal, with distinct peak hours and calm off-peak/night hours, even in chaotic scenarios. Close with </think> and then write the final scenario description.",
+    "thinking_tag_regex": "<think>.*?</think>",
+    "fallback_scenario_display": "[Thinking mode active — scenario encoded directly]",
+    "test_system_prompt": "You are an expert traffic scenario simulator.",
+    "test_user_prompt": "Imagine a chaotic stormy Monday morning."
+  },
+  "error_messages": {
+    "model_not_found_hint": "Please verify model path or place the required GGUF weights into the models/vault/ directory."
+  }
+}

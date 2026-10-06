@@ -17,6 +17,11 @@ src/models/vault/*.gguf
 __pycache__/
 *.py[cod]
 *$py.class
+*.log
+.coverage
+htmlcov/
+.pytest_cache/
+site/
 
 # Ignorar ambientes virtuais e chaves
 .venv/

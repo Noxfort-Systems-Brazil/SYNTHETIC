@@ -1,0 +1,37 @@
+# SYNTHETIC  - An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis
+# Copyright (C) 2026 Noxfort Systems 
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# SOFTWARE.
+#
+# File: ui/components/__init__.py
+# Author: Gabriel Moraes
+# Date: 2026-08-16
+
+from ui.components.language_section import LanguageSection
+from ui.components.sources_section import SourcesSection
+from ui.components.problems_section import ProblemsSection
+from ui.components.settings_section import SettingsSection
+from ui.components.output_section import OutputSection
+from ui.components.map_section import MapSection
+from ui.components.action_section import ActionSection
+
+__all__ = [
+    "LanguageSection",
+    "SourcesSection",
+    "ProblemsSection",
+    "SettingsSection",
+    "OutputSection",
+    "MapSection",
+    "ActionSection",
+]

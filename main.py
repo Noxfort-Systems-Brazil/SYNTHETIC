@@ -21,6 +21,15 @@
 import threading
 import sys
 import os
+
+# Prevent CUDA memory fragmentation due to dynamic AutoML model loading
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
+try:
+    import src.core.cuda_loader  # noqa: F401
+except Exception:
+    pass
+
 from typing import Dict, Any, Callable
 import torch
 
@@ -54,9 +63,12 @@ def run_simulation(config: Dict[str, Any], on_success: Callable[[str], None], on
         if config['sources']['loop']: active_generators.append(LoopGenerator(config))
 
         orchestrator = SimulationOrchestrator(config, active_generators)
-        orchestrator.run()
+        success, error = orchestrator.run()
         
-        on_success(config["output_directory"])
+        if success:
+            on_success(config["output_directory"])
+        else:
+            on_error(error)
     
     except (ImportError, ValueError, RuntimeError) as e:
         logger.error(f"[main] Simulation failed during setup/execution: {e}", exc_info=True)

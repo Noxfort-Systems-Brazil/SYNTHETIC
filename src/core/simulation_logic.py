@@ -25,9 +25,15 @@ import math
 import random
 from typing import List, Tuple, Optional
 
-# --- Core Interfaces and Physics ---
 from ui.interfaces import IDataGenerator
-from src.core.traffic_simulator import TrafficSimulator, SmallFlowStrategy, MediumFlowStrategy, LargeFlowStrategy, ChaoticFlowStrategy
+from src.core.traffic_simulator import (
+    TrafficSimulator,
+    SmallFlowStrategy,
+    MediumFlowStrategy,
+    LargeFlowStrategy,
+    ChaoticFlowStrategy,
+    DynamicContinuousFlowStrategy
+)
 
 # --- AI Agents & Engines ---
 from src.models.slm_engine import SLMEngine
@@ -59,7 +65,7 @@ class SimulationOrchestrator:
         temp_map = {"Ultrarealista": 0.0, "Realista": 0.5, "Criativo": 1.0}
         qwen_temp = temp_map.get(slm_mode, 0.5)
         logger.info(f"[Maestro] Waking up the Neural Engine (Mode: {slm_mode}, Temp: {qwen_temp})...")
-        self.slm = SLMEngine(n_gpu_layers=0, temperature=qwen_temp)
+        self.slm = SLMEngine(n_gpu_layers=-1, temperature=qwen_temp)
         self.screenwriter = ScreenwriterAgent(self.slm)
         self.director = DirectorAgent()
 
@@ -128,48 +134,59 @@ class SimulationOrchestrator:
             # =============================================================
             logger.info(f"[Maestro] ═══ Phase 1: Dreaming scenarios with LLM ═══")
             
-            day_plans = []
+            # 1. Identify all daily chunks
+            day_chunks = []
             scan_time = start_time
-            previous_weather = None
-            weather_state = None
-            
             while scan_time < end_time:
                 next_midnight = (scan_time + datetime.timedelta(days=1)).replace(
                     hour=0, minute=0, second=0, microsecond=0
                 )
                 chunk_end = min(next_midnight, end_time)
-                
                 seconds_in_chunk = (chunk_end - scan_time).total_seconds()
                 steps_in_chunk = math.ceil(seconds_in_chunk / interval_seconds)
-                
-                if steps_in_chunk <= 0:
-                    scan_time = next_midnight
-                    continue
+                if steps_in_chunk > 0:
+                    day_chunks.append({
+                        'start_time': scan_time,
+                        'steps': steps_in_chunk,
+                        'date': scan_time.date()
+                    })
+                scan_time = next_midnight
 
-                current_date = scan_time.date()
-                weather_state, current_weather = EnvironmentManager.get_dynamic_weather(weather_state)
+            # 2. Generate contiguous stochastic weather chain across all days
+            weather_chain = EnvironmentManager.generate_weather_chain(len(day_chunks))
+
+            day_plans = []
+            for day_idx, chunk in enumerate(day_chunks):
+                current_date = chunk['date']
+                current_state, current_weather = weather_chain[day_idx]
+                previous_weather = weather_chain[day_idx - 1][1] if day_idx > 0 else None
                 
+                # Determine prospective tomorrow forecast
+                if day_idx + 1 < len(weather_chain):
+                    next_weather_forecast = weather_chain[day_idx + 1][1]
+                else:
+                    _, next_weather_forecast = EnvironmentManager.peek_next_weather(current_state)
+
                 constraints = {
                     "weather": current_weather,
                     "previous_weather": previous_weather,
+                    "next_weather_forecast": next_weather_forecast,
                     "flow_level": self.ui_flow_level, 
                     "day_of_week": current_date.strftime("%A"), 
                     "start_time": "00:00:00"
                 }
                 
                 daily_script = self.screenwriter.create_daily_script(current_date, constraints)
-                previous_weather = current_weather
                 
                 day_plans.append({
                     'script': daily_script,
-                    'steps': steps_in_chunk,
-                    'start_time': scan_time,
+                    'steps': chunk['steps'],
+                    'start_time': chunk['start_time'],
                     'weather': current_weather,
                     'constraints': constraints,
                     'date': current_date,
                 })
-                
-                scan_time = next_midnight
+
             
             # Release LLM — all scripts generated, free ~1.7GB
             logger.info(f"[Maestro] Phase 1 complete: {len(day_plans)} daily scripts generated.")
@@ -190,10 +207,16 @@ class SimulationOrchestrator:
                 current_date = plan['date']
                 constraints = plan['constraints']
                 
+                if 'flow_schedule' in plan['script']:
+                    self.traffic_simulator = TrafficSimulator(
+                        DynamicContinuousFlowStrategy(plan['script']['flow_schedule'])
+                    )
+
                 physics_data = self.director.action(plan['script'], steps_in_chunk, self.graph_embedding)
                 
                 logger.info(f"[Maestro] Generating and Corrupting {steps_in_chunk} files for "
                             f"{current_date} ({constraints['day_of_week']}) | Weather: {current_weather}...")
+
                 
                 for step_idx in range(steps_in_chunk):
                     if current_time >= end_time:
@@ -228,9 +251,14 @@ class SimulationOrchestrator:
         if idx < 0:
             return  # Safety fallback if physics_data is empty
         
-        # --- A. PURE GROUND TRUTH PHYSICS ---
-        ground_truth = self.traffic_simulator.get_ground_truth(current_time)
-        ground_truth['weather'] = weather
+        # --- A. PURE GROUND TRUTH PHYSICS (From PI-DeepONet + PI-VAE + PGDM Diffusion) ---
+        sim_truth = self.traffic_simulator.get_ground_truth(current_time)
+        ground_truth = {
+            "vehicle_flow": physics_data['vehicle_flow'][idx] if 'vehicle_flow' in physics_data else sim_truth['vehicle_flow'],
+            "current_speed": physics_data['current_speed'][idx] if 'current_speed' in physics_data else sim_truth['current_speed'],
+            "free_flow_speed": sim_truth.get('free_flow_speed', 80),
+            "weather": weather
+        }
 
         # --- B. SENSOR FAULT INJECTION (CORRUPTION LAYER) ---
         sensor_data = ground_truth.copy()

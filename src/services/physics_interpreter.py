@@ -20,7 +20,7 @@
 
 import numpy as np
 import torch
-from typing import Dict, List
+from typing import Dict, List, Optional, Any
 from src.core.constants import (
     DEFAULT_SPEED_CLAMP_MIN,
     DEFAULT_SPEED_CLAMP_MAX,
@@ -46,24 +46,39 @@ class TrafficPhysicsInterpreter:
         return {"intensity": intensity, "chaos": chaos}
 
     @staticmethod
-    def generate_reference_signal(props: Dict[str, float], steps: int, max_context_len: int, device: torch.device) -> torch.Tensor:
+    def generate_reference_signal(
+        props: Dict[str, float],
+        steps: int,
+        max_context_len: int,
+        device: torch.device,
+        deeponet: Optional[Any] = None,
+        cond_tensor: Optional[torch.Tensor] = None,
+        gat_emb: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
         """
-        Creates a reference signal for the TCN-VAE tuner.
-        Returns data in TCN format: [Batch, Features, Seq_Len].
-        
-        The signal is capped at max_context_len * 3 steps
-        to keep Optuna trials lightweight without losing representative quality.
+        Creates a physics-grounded reference signal for the TCN-VAE tuner and CSDI conditioning.
+        If DeepONet is provided, uses the PI-DeepONet forward pass.
+        Otherwise falls back to the analytical hydrodynamic Greenshields formulation.
         """
         ref_steps: int = min(steps, max_context_len * 3)
-        
+
+        if deeponet is not None and cond_tensor is not None:
+            with torch.no_grad():
+                t_norm = torch.linspace(0.0, 1.0, ref_steps, device=device).unsqueeze(-1)
+                prior = deeponet(cond_tensor, t_norm, gat_emb)
+                # Normalize prior to unit scale for VAE/CSDI
+                flow_norm = prior[:, 0:1, :] / 300.0
+                speed_norm = prior[:, 1:2, :] / 80.0
+                return torch.cat([flow_norm, speed_norm], dim=1)
+
         base_flow: float = 1.0 * props['intensity']
         base_speed: float = 0.8 / props['intensity']
         
         t: np.ndarray = np.linspace(0, 4 * np.pi, ref_steps)
-        noise: np.ndarray = np.random.normal(0, props['chaos'], ref_steps)
+        noise: np.ndarray = np.random.normal(0, props['chaos'] * 0.5, ref_steps)
         
         flow_pattern: np.ndarray = base_flow * (0.5 * (np.sin(t) + 1)) + (noise * 0.1)
-        speed_pattern: np.ndarray = base_speed * (1.0 - (flow_pattern / (base_flow * 2.5)))
+        speed_pattern: np.ndarray = base_speed * np.clip(1.0 - (flow_pattern / (base_flow * 2.2)), 0.1, 1.2)
         
         data: np.ndarray = np.stack([flow_pattern, speed_pattern], axis=0)
         data = data[np.newaxis, :, :]  # [1, 2, ref_steps]

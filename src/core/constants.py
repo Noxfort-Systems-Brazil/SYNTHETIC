@@ -18,7 +18,7 @@
 # Author: Gabriel Moraes
 # Date: 2026-06-03
 
-from typing import List
+from typing import List, Dict
 
 # --- Geographic & Physical Constants ---
 EARTH_RADIUS_METERS: float = 6371000.0
@@ -74,3 +74,31 @@ LOOP_LANE_2_SPEED_MULTIPLIER_MIN: float = 0.70
 LOOP_LANE_2_SPEED_MULTIPLIER_MAX: float = 0.95
 LOOP_LIGHT_VEHICLE_LENGTH: float = 4.0
 LOOP_HEAVY_VEHICLE_LENGTH: float = 12.0
+
+# --- Flow Level & Continuous Schedule Constants ---
+NUM_SLOTS_PER_DAY: int = 48  # 48 slots of 30 minutes in 24 hours
+
+LEVEL_MAP: Dict[str, int] = {
+    "baixo": 0,
+    "low": 0,
+    "pequeno": 0,
+    "small": 0,
+    "medio": 1,
+    "médio": 1,
+    "medium": 1,
+    "alto": 2,
+    "high": 2,
+    "grande": 2,
+    "large": 2,
+    "caotico": 3,
+    "caótico": 3,
+    "chaotic": 3,
+}
+
+REVERSE_LEVEL_MAP: Dict[int, str] = {
+    0: "baixo",
+    1: "médio",
+    2: "alto",
+    3: "caótico",
+}
+

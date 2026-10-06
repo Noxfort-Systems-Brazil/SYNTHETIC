@@ -22,7 +22,7 @@ import optuna
 import torch
 import torch.optim as optim
 from src.models.vae_tcn import VAETCN, calculate_vae_loss
-from src.optimizer.callbacks import PruningCallback
+from src.optimizer.callbacks import PruningCallback, StudyEarlyStoppingCallback
 
 from typing import Dict, Any, Optional
 from src.core.logger import logger
@@ -62,7 +62,8 @@ class HyperTuner:
 
         study.optimize(
             lambda trial: self._objective(trial, sample_data),
-            n_trials=self.n_trials
+            n_trials=self.n_trials,
+            callbacks=[StudyEarlyStoppingCallback(patience=2, min_delta=0.01)]
         )
 
         logger.info("[AutoML] Optimization finished.")
@@ -78,7 +79,7 @@ class HyperTuner:
             self.best_params = {
                 'n_tcn_layers': 3,
                 'tcn_base_channels': 16,
-                'latent_dim': 128,
+                'latent_dim': 2048,
                 'dropout': 0.2,
                 'lr': 1e-3,
                 'beta': 1.0,
@@ -97,12 +98,13 @@ class HyperTuner:
         seq_len: int = data.shape[2]     # sequence length
 
         # --- 1. Suggest TCN-VAE Hyperparameters ---
-        n_tcn_layers: int = trial.suggest_int("n_tcn_layers", 2, 4)
-        tcn_base_channels: int = trial.suggest_int("tcn_base_channels", 16, 64, step=16)
-        latent_dim: int = trial.suggest_int("latent_dim", 64, 512, step=64)
+        n_tcn_layers: int = trial.suggest_int("n_tcn_layers", 2, 3)
+        tcn_base_channels: int = trial.suggest_int("tcn_base_channels", 16, 32, step=16)
+        latent_dim: int = 2048  # Fixed to match SLM embedding dimension
         dropout: float = trial.suggest_float("dropout", 0.05, 0.4, step=0.05)
         lr: float = trial.suggest_float("lr", 1e-4, 1e-2, log=True)
         beta: float = trial.suggest_float("beta", 0.1, 2.0, step=0.1)
+        lambda_physics: float = trial.suggest_float("lambda_physics", 0.1, 1.0, step=0.1)
 
         # Build progressive channel list: e.g., [16, 32, 64] for 3 layers
         tcn_channels = [tcn_base_channels * (2 ** i) for i in range(n_tcn_layers)]
@@ -128,7 +130,7 @@ class HyperTuner:
         final_loss: float = 0.0
         
         pruner = PruningCallback(trial, monitor="loss")
-        scaler = torch.cuda.amp.GradScaler(enabled=torch.cuda.is_available())
+        scaler = torch.amp.GradScaler('cuda', enabled=torch.cuda.is_available())
 
         for epoch in range(5):
             optimizer.zero_grad()
@@ -136,8 +138,8 @@ class HyperTuner:
             device_type: str = 'cuda' if data.is_cuda else 'cpu'
             with torch.autocast(device_type=device_type, enabled=(device_type == 'cuda')):
                 reconstruction, mu, logvar = model(data)
-                total_loss, recon_loss, kld_loss = calculate_vae_loss(
-                    reconstruction, data, mu, logvar, beta=beta
+                total_loss, recon_loss, kld_loss, physics_loss = calculate_vae_loss(
+                    reconstruction, data, mu, logvar, beta=beta, lambda_physics=lambda_physics
                 )
             
             scaler.scale(total_loss).backward()
@@ -151,10 +153,16 @@ class HyperTuner:
                 pruner.check_pruned(epoch, final_loss)
             except optuna.exceptions.TrialPruned:
                 del model
+                del optimizer
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
                 raise
 
         # Cleanup
         del model
+        del optimizer
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         return final_loss
 
     def optimize_csdi(self, data: torch.Tensor, cond: torch.Tensor, gat_cond: torch.Tensor) -> Dict[str, Any]:
@@ -170,7 +178,8 @@ class HyperTuner:
 
         study.optimize(
             lambda trial: self._objective_csdi(trial, data, cond, gat_cond),
-            n_trials=self.n_trials
+            n_trials=self.n_trials,
+            callbacks=[StudyEarlyStoppingCallback(patience=2, min_delta=0.01)]
         )
 
         completed = [t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE]
@@ -216,7 +225,7 @@ class HyperTuner:
         final_loss = 0.0
         
         pruner = PruningCallback(trial, monitor="loss")
-        scaler = torch.cuda.amp.GradScaler(enabled=torch.cuda.is_available())
+        scaler = torch.amp.GradScaler('cuda', enabled=torch.cuda.is_available())
 
         for epoch in range(5):
             optimizer.zero_grad()
@@ -234,7 +243,13 @@ class HyperTuner:
                 pruner.check_pruned(epoch, final_loss)
             except optuna.exceptions.TrialPruned:
                 del model
+                del optimizer
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
                 raise
 
         del model
+        del optimizer
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         return final_loss

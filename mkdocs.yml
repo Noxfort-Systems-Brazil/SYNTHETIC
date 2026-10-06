@@ -1,0 +1,119 @@
+# ==============================================================================
+# SYNTHETIC — MkDocs Configuration (Material for MkDocs)
+# An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis
+# Copyright (C) 2026 — Noxfort Systems
+# ==============================================================================
+
+site_name: "SYNTHETIC — Technical Documentation"
+site_description: "Technical documentation for SYNTHETIC — Multi-Modal Traffic Scenario Synthesis Engine by Noxfort Systems."
+site_author: "Gabriel Moraes — Noxfort Systems"
+copyright: "Copyright &copy; 2026 — Noxfort Systems"
+
+# Exclude conflicting GitHub folder readme and old standalone notes from MkDocs build
+exclude_docs: |
+  /README.md
+  ENVIRONMENT_ENGINE.md
+  SPATIAL_TOPOLOGY.md
+  UI_LOCALIZATION.md
+  SYNTHETIC_APACHE.txt
+
+# ==============================================================================
+# Theme
+# ==============================================================================
+theme:
+  name: material
+  language: en
+  icon:
+    logo: material/car-multiple
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: green
+      toggle:
+        icon: material/weather-sunny
+        name: Light Mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: green
+      toggle:
+        icon: material/weather-night
+        name: Dark Mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.path
+    - navigation.instant
+    - navigation.tracking
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+
+# ==============================================================================
+# Markdown Extensions
+# ==============================================================================
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+# ==============================================================================
+# Plugins
+# ==============================================================================
+plugins:
+  - search
+
+# ==============================================================================
+# Navigation
+# ==============================================================================
+nav:
+  - Overview: index.md
+  - Master MOC: SYNTHETIC_MOC.md
+  - Architecture & Core:
+    - System Blueprint: architecture.md
+    - Spatial & Environment: spatial_and_environment.md
+    - Multi-Modal Generators: multimodal_generators.md
+  - Generative AI & Physics:
+    - Hybrid AI & Diffusion: generative_ai_and_physics.md
+  - Frontend & Control:
+    - Desktop UI & Localization: ui_and_localization.md
+  - Engineering & QA:
+    - API & Services Reference: api_reference.md
+    - Testing & QA Suite: testing.md
+    - CI/CD Pipeline: ci_cd.md
+    - Deployment & Setup: deployment_and_setup.md
+  - Multi-Language Hubs:
+    - 🇺🇸 English: en/README.md
+    - 🇧🇷 Português (Brasil): pt-br/README.md
+    - 🇫🇷 Français: fr/README.md
+    - 🇪🇸 Español: es/README.md
+    - 🇷🇺 Русский: ru/README.md
+    - 🇨🇳 简体中文: zh/README.md
+
+# ==============================================================================
+# Extra CSS
+# ==============================================================================
+extra_css:
+  - stylesheets/extra.css

@@ -164,18 +164,59 @@ class VAETCN(nn.Module):
             
         return synthetic_seq
 
-def calculate_vae_loss(reconstruction, original, mu, logvar, beta=1.0):
+def calculate_vae_loss(
+    reconstruction: torch.Tensor,
+    original: torch.Tensor,
+    mu: torch.Tensor,
+    logvar: torch.Tensor,
+    beta: float = 1.0,
+    lambda_physics: float = 0.5,
+    free_flow_speed: float = 1.0,
+    max_flow: float = 2.5,
+    max_acceleration: float = 0.2
+):
     """
-    Computes the VAE Loss: Reconstruction Loss (MSE) + KL Divergence.
-    Beta controls the weight of the stochasticity.
+    Computes the Physics-Informed VAE (PI-VAE) Loss:
+    Reconstruction Loss (MSE) + KL Divergence + Traffic Physics Constraints.
+
+    Physics penalties:
+    1. Greenshields Fundamental Diagram:
+       expected_speed = free_flow_speed * (1.0 - flow / max_flow)
+    2. Acceleration / Inertia bounds:
+       penalizes |v_{t+1} - v_t| > max_acceleration
+    3. Non-negativity constraint:
+       penalizes flow < 0 and speed < 0
     """
     recon_loss = F.mse_loss(reconstruction, original, reduction='mean')
     
     # KL Divergence: How closely the latent distribution matches a standard Normal distribution
     kld_loss = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
     
-    total_loss = recon_loss + beta * kld_loss
-    return total_loss, recon_loss, kld_loss
+    # --- Traffic Physics Loss ---
+    physics_loss = torch.tensor(0.0, device=reconstruction.device)
+    if reconstruction.shape[1] >= 2:
+        flow = reconstruction[:, 0, :]
+        speed = reconstruction[:, 1, :]
+
+        # 1. Non-negativity penalty
+        non_neg_penalty = torch.mean(F.relu(-flow).pow(2) + F.relu(-speed).pow(2))
+
+        # 2. Greenshields Fundamental Diagram consistency
+        expected_speed = free_flow_speed * torch.clamp(1.0 - (flow / max_flow), min=0.0, max=1.2)
+        greenshields_loss = F.mse_loss(speed, expected_speed)
+
+        # 3. Acceleration / Inertia limit
+        if speed.shape[-1] > 1:
+            diff_speed = speed[:, 1:] - speed[:, :-1]
+            accel_violation = F.relu(torch.abs(diff_speed) - max_acceleration)
+            accel_loss = torch.mean(accel_violation.pow(2))
+        else:
+            accel_loss = torch.tensor(0.0, device=reconstruction.device)
+
+        physics_loss = greenshields_loss + 0.5 * accel_loss + non_neg_penalty
+
+    total_loss = recon_loss + (beta * kld_loss) + (lambda_physics * physics_loss)
+    return total_loss, recon_loss, kld_loss, physics_loss
 
 # Self-test block
 if __name__ == "__main__":
@@ -192,10 +233,10 @@ if __name__ == "__main__":
     
     # Forward pass
     reconstruction, mu, logvar = model(dummy_traffic)
-    loss, recon, kld = calculate_vae_loss(reconstruction, dummy_traffic, mu, logvar)
+    loss, recon, kld, phy = calculate_vae_loss(reconstruction, dummy_traffic, mu, logvar)
     
     print(f"Original shape: {dummy_traffic.shape}")
     print(f"Reconstructed shape: {reconstruction.shape}")
     print(f"Latent vector (mu) shape: {mu.shape}")
-    print(f"Total Loss: {loss.item():.4f} (Recon: {recon.item():.4f}, KLD: {kld.item():.4f})")
-    print("\nArchitecture is mathematically sound and ready for the Director Agent.")
+    print(f"Total Loss: {loss.item():.4f} (Recon: {recon.item():.4f}, KLD: {kld.item():.4f}, Physics: {phy.item():.4f})")
+    print("\nPI-VAE Architecture is mathematically sound and ready for the Director Agent.")

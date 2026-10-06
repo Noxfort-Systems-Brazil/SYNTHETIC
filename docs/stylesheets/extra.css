@@ -1,0 +1,11 @@
+/* SYNTHETIC Documentation - Custom Extra CSS */
+:root {
+  --md-primary-fg-color: #1a73e8;
+  --md-accent-fg-color: #00e676;
+}
+
+/* Custom styles for mermaid diagrams and math rendering */
+.mermaid {
+  text-align: center;
+  margin: 1.5em 0;
+}

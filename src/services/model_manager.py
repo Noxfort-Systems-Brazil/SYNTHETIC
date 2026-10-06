@@ -23,6 +23,7 @@ import torch
 from typing import Dict, Any, Optional
 from src.models.vae_tcn import VAETCN
 from src.models.csdi_engine import CSDIBackbone
+from src.models.deeponet import TrafficDeepONet
 from src.core.logger import logger
 
 class SequentialModelManager:
@@ -42,6 +43,13 @@ class SequentialModelManager:
         }
         self.guardian: Optional[VAETCN] = None
         
+        self.deeponet_params: Dict[str, Any] = {
+            'cond_dim': 2048,
+            'gat_dim': 32,
+            'basis_dim': 64,
+        }
+        self.deeponet: Optional[TrafficDeepONet] = None
+
         self.csdi_params: Dict[str, Any] = {
             'n_features': 2,
             'cond_dim': 2048,
@@ -73,6 +81,22 @@ class SequentialModelManager:
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
             logger.info("[ModelManager] VAE-TCN Guardian released from memory.")
+
+    def ensure_deeponet(self) -> TrafficDeepONet:
+        if self.deeponet is None:
+            self.deeponet = TrafficDeepONet(**self.deeponet_params).to(self.device)
+            self.deeponet.eval()
+            logger.info("[ModelManager] TrafficDeepONet loaded into memory.")
+        return self.deeponet
+
+    def release_deeponet(self) -> None:
+        if self.deeponet is not None:
+            del self.deeponet
+            self.deeponet = None
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            logger.info("[ModelManager] TrafficDeepONet released from memory.")
 
     def ensure_csdi(self) -> CSDIBackbone:
         if self.csdi is None:

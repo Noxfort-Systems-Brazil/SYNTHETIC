@@ -1,0 +1,50 @@
+{
+  "english_days": [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ],
+  "city_mapping": {
+    "pequeno": "Small City",
+    "médio": "Medium City",
+    "grande": "Metropolis",
+    "caótico": "Megalopolis",
+    "baixo": "Small City",
+    "alto": "Metropolis",
+    "small": "Small City",
+    "medium": "Medium City",
+    "large": "Metropolis",
+    "high": "Metropolis",
+    "low": "Small City",
+    "caotic": "Megalopolis",
+    "chaotic": "Megalopolis"
+  },
+  "flow_translation": {
+    "pequeno": "low",
+    "baixo": "low",
+    "médio": "medium",
+    "medio": "medium",
+    "grande": "high",
+    "alto": "high",
+    "caótico": "chaotic",
+    "caotico": "chaotic",
+    "small": "low",
+    "low": "low",
+    "medium": "medium",
+    "large": "high",
+    "high": "high",
+    "caotic": "chaotic",
+    "chaotic": "chaotic"
+  },
+  "system_instruction": "You are the Synthetic Screenwriter, an expert macro-level traffic network simulator and physical flow director. Your mission is to simulate the fluid dynamics of a city's traffic grid across 48 half-hour time blocks (from 00:00 to 23:30).\n\nCRITICAL PHYSICAL FLOW RULES:\n1. State Hierarchy: 'low' <-> 'medium' <-> 'high' <-> 'chaotic'.\n2. Bidirectional Continuity: Transitions between consecutive 30-minute intervals can only stay in the same state or move to an immediate neighbor. NEVER jump directly from 'low' to 'high' or 'chaotic', nor from 'chaotic' to 'low'.\n3. Dawn Boundary: 00:00 to 05:30 (the first 12 slots) MUST ALWAYS BE 'low'.\n4. Peak Periods: Morning rush (06:00-09:30) ramps from 'low' -> 'medium' -> 'high'/'chaotic' -> 'medium'. Evening rush (16:30-20:30) ramps from 'medium' -> 'high'/'chaotic' -> 'medium'.\n5. Late Night Boundary: 22:00 to 23:30 must decay to 'low'.",
+  "weather_transitions": {
+    "persisting": "Yesterday's weather ('{previous_weather}') persists into today, carrying over its physical effects on road surfaces and driver behavior. ",
+    "changing": "Yesterday the city experienced '{previous_weather}'. Today, atmospheric conditions transition into '{weather_seed}'. Consider how the lingering effects of yesterday's weather impact early road friction. ",
+    "forecast": "Tomorrow's meteorological trend forecast is '{next_weather_forecast}'. "
+  },
+  "user_prompt_template": "Context: Today is {day_of_week}. The simulation starts at {start_time} (Midnight). The environment is a {city_size} with a target peak flow classification of '{english_flow}'. {transition_context}{forecast_context}The active weather condition for today is '{weather_seed}'.\n\nGenerate the 48-slot half-hour flow schedule for the day (00:00, 00:30, 01:00, ..., 23:30) respecting the physical transition rules and boundary anchors. Output your response as a JSON object with two fields:\n- \"scenario_description\": A concise macro-level physical narrative of the city's traffic evolution.\n- \"schedule\": An array of 48 strings ('low', 'medium', 'high', 'chaotic') matching the 48 half-hour slots of the day."
+}

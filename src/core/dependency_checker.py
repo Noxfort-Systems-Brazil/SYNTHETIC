@@ -21,6 +21,12 @@
 import importlib
 import sys
 from typing import Dict, Tuple
+
+try:
+    import src.core.cuda_loader  # noqa: F401
+except Exception:
+    pass
+
 from src.core.logger import logger
 
 class DependencyError(ImportError):
@@ -36,12 +42,13 @@ class DependencyChecker:
     DEPENDENCIES: Dict[str, str] = {
         "torch": "pip install torch",
         "optuna": "pip install optuna",
-        "llama_cpp": "pip install llama-cpp-python",
+        "llama_cpp": "pip install llama-cpp-python nvidia-cuda-runtime-cu12 nvidia-cublas-cu12",
         "tkintermapview": "pip install tkintermapview",
         "haversine": "pip install haversine",
         "torch_geometric": "pip install torch-geometric",
         "numpy": "pip install numpy",
-        "lxml": "pip install lxml"
+        "lxml": "pip install lxml",
+        "pyproj": "pip install pyproj"
     }
 
     @classmethod
@@ -53,9 +60,9 @@ class DependencyChecker:
             mod = importlib.import_module(module_name)
             version = getattr(mod, "__version__", "unknown")
             return True, f"Found {module_name} (v{version})"
-        except ImportError as e:
+        except (ImportError, RuntimeError, OSError) as e:
             install_cmd = cls.DEPENDENCIES.get(module_name, f"pip install {module_name}")
-            return False, f"Missing dependency '{module_name}'. Install using: {install_cmd} ({str(e)})"
+            return False, f"Missing or corrupted dependency '{module_name}'. Install using: {install_cmd} ({str(e)})"
 
     @classmethod
     def verify_all_dependencies(cls, fail_on_missing: bool = True) -> bool:

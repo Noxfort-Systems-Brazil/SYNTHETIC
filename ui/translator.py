@@ -16,37 +16,55 @@
 #
 # File: ui/translator.py
 # Author: Gabriel Moraes
-# Date: 2026-06-03
+# Date: 2026-08-16
 
-import os
 import json
-from typing import Dict, Any, Optional
-from src.core.logger import logger
+import os
+from typing import Any, Dict, Optional
 
-class Translator:
+from src.core.logger import logger
+from ui.interfaces import ITranslator
+
+
+class Translator(ITranslator):
     """
     Singleton-like translator to manage UI localization strings.
-    Loads dictionaries from ui/locale/*.json.
+    Implements ITranslator for Dependency Inversion and Open/Closed compliance.
     """
-    _instance: Optional['Translator'] = None
 
-    def __new__(cls) -> 'Translator':
+    _instance: Optional["Translator"] = None
+
+    def __new__(cls) -> "Translator":
         if cls._instance is None:
             cls._instance = super(Translator, cls).__new__(cls)
             cls._instance._init()
         return cls._instance
 
     def _init(self) -> None:
-        self.locale: str = "en" # default to english
+        self.locale: str = "en"  # default to english
         self.strings: Dict[str, str] = {}
+        self._supported_locales: Dict[str, str] = {
+            "English": "en",
+            "Português (Brasil)": "pt-br",
+            "Français": "fr",
+            "中文 (简体)": "zh-cn",
+            "Русский": "ru",
+            "Español": "es",
+        }
         self._load_strings()
 
+    def get_supported_locales(self) -> Dict[str, str]:
+        """Returns the dictionary mapping display names to locale codes."""
+        return dict(self._supported_locales)
+
     def set_locale(self, locale_code: str) -> None:
-        if locale_code in ["en", "pt-br", "fr", "zh-cn", "ru", "es"]:
+        """Sets active locale code if supported."""
+        if locale_code in self._supported_locales.values():
             self.locale = locale_code
             self._load_strings()
 
     def get_locale(self) -> str:
+        """Returns the active locale code."""
         return self.locale
 
     def _load_strings(self) -> None:
@@ -72,5 +90,6 @@ class Translator:
                 return text
         return text
 
-# Export a global instance for convenience
+
+# Export global default instance for convenience
 translator: Translator = Translator()
