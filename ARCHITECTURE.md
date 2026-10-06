@@ -163,3 +163,12 @@ graph TD
     .venv/bin/pytest -v --cov=src --cov=ui --cov=main tests/
     ```
 
+---
+
+<div align="center">
+  <img src="docs/assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="48" /><br/>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <i>An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis • SYNTHETIC Engine v1.0.0</i><br/>
+  <small>Licensed under the <a href="LICENSE">Apache License, Version 2.0</a>. © 2026 Noxfort Systems.</small>
+</div>
+

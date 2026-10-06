@@ -35,3 +35,12 @@ In `ui/gui.py`, a `ttk.Combobox` is bound to the `<<ComboboxSelected>>` event. W
 2. The `update_ui_texts()` method is triggered across the application.
 3. Every `ttk.Label`, `ttk.Button`, `ttk.LabelFrame`, and `ttk.Checkbutton` has its `.config(text=...)` property overwritten with the new translation.
 4. Active sub-windows (like `MapSelectorWindow`) instantly reflect the new language via their local `update_instructions()` polling logic.
+
+---
+
+<div align="center">
+  <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i>
+</div>
+

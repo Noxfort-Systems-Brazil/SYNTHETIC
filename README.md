@@ -284,3 +284,11 @@ This software is intended as a research and testing tool for Intelligent Transpo
 Noxfort Systems is a deeptech company focused on AI-driven simulation infrastructure for critical urban systems. SYNTHETIC represents our commitment to delivering strictly coherent, realistic datasets for the Intelligent Transportation Systems ecosystem.
 
 ---
+
+<div align="center">
+  <img src="docs/assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="48" /><br/>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <i>An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis • SYNTHETIC Engine v1.0.0</i><br/>
+  <small>Licensed under the <a href="LICENSE">Apache License, Version 2.0</a>. © 2026 Noxfort Systems.</small>
+</div>
+

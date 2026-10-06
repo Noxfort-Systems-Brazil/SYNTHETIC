@@ -30,3 +30,12 @@ The GATv2 outputs a **Spatial Context Tensor**. During Phase 2, the `CSDIEngine`
 - The GATv2 provides the *physical* constraints (e.g., "This road only has two connected adjacent nodes").
 
 Together, this guarantees that synthesized congestion waves propagate naturally across the specific grid of the city loaded by the user.
+
+---
+
+<div align="center">
+  <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i>
+</div>
+

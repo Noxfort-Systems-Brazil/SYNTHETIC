@@ -25,3 +25,12 @@ When requested by the `SimulationOrchestrator`, the `EnvironmentManager` outputs
 3. **Characteristic**: Appends narrative physical implications (e.g., "with slick roads").
 
 These are joined into a cohesive string (e.g., *"Moderate rain with slick roads"*) and injected directly into the Phi-4 SLM prompt. The SLM's advanced reasoning engine mathematically correlates "slick roads" with a necessary drop in physical free-flow speed, which is later enforced by the VAE-TCN Guardian.
+
+---
+
+<div align="center">
+  <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i>
+</div>
+
