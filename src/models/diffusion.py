@@ -16,7 +16,7 @@
 #
 # File: src/models/diffusion.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 import math
 import torch

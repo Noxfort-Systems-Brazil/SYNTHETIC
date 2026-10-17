@@ -16,7 +16,7 @@
 #
 # File: ui/config_builder.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 import os
 from typing import Any, Dict, List, Optional

@@ -16,7 +16,7 @@
 #
 # File: tests/test_physics_godunov.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 import unittest
 import numpy as np

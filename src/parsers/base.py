@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: parsers/base.py
+# File: src/parsers/base.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from abc import ABC, abstractmethod
 import gzip

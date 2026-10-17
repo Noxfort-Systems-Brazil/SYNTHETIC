@@ -16,7 +16,7 @@
 #
 # File: tests/test_map_provider.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 import gzip
 import os

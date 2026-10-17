@@ -16,7 +16,7 @@
 #
 # File: ui/components/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from ui.components.language_section import LanguageSection
 from ui.components.sources_section import SourcesSection

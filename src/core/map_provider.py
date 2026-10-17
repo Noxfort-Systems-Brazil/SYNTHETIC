@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/map_provider.py
+# File: src/core/map_provider.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 import os
 import xml.etree.ElementTree as ET

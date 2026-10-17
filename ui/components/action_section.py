@@ -16,7 +16,7 @@
 #
 # File: ui/components/action_section.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from tkinter import ttk
 from typing import Callable, Optional

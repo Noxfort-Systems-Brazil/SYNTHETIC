@@ -16,7 +16,7 @@
 #
 # File: src/engine/incident_manager.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 from dataclasses import dataclass
 from typing import Dict, List, Optional

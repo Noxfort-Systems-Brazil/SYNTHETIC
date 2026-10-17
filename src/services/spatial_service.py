@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: services/spatial_service.py
+# File: src/services/spatial_service.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 import math
 from typing import Tuple

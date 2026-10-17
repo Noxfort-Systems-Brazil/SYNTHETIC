@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: optimizer/tuner.py
+# File: src/optimizer/tuner.py
 # Author: Gabriel Moraes
-# Date: 2026-04-27
+# Date: October 2026
 
 import optuna
 import torch

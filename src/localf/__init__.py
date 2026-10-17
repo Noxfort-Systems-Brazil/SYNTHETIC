@@ -14,7 +14,7 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: localf/__init__.py
+# File: src/localf/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: October 2026
 

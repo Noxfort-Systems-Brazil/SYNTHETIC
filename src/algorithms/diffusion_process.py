@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: diffusion_process.py
+# File: src/algorithms/diffusion_process.py
 # Author: Gabriel Moraes
-# Date: 2026-06-04
+# Date: October 2026
 
 import torch
 import torch.nn.functional as F

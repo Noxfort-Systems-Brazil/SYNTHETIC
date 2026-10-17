@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: models/csdi_engine.py
+# File: src/models/csdi_engine.py
 # Author: Gabriel Moraes
-# Date: 2026-04-27
+# Date: October 2026
 
 import math
 import torch

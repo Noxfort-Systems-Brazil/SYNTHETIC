@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: parsers/__init__.py
+# File: src/parsers/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from src.parsers.base import IMapParser
 from src.parsers.osm import OSMMapParser

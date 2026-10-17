@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: flow/factory.py
+# File: src/flow/factory.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from src.core.constants import NUM_SLOTS_PER_DAY
 from src.flow.model import FlowSchedule

@@ -16,7 +16,7 @@
 #
 # File: tests/test_environment.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: October 2026
 
 import unittest
 import datetime

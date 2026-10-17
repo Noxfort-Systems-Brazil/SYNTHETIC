@@ -16,7 +16,7 @@
 #
 # File: ui/dialog_service.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from abc import ABC, abstractmethod
 from tkinter import filedialog, messagebox

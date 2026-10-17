@@ -16,7 +16,7 @@
 #
 # File: tests/test_pinn_hybrid.py
 # Author: Gabriel Moraes
-# Date: 2026-09-29
+# Date: October 2026
 
 import unittest
 import torch

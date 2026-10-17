@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: flow/parser.py
+# File: src/flow/parser.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 import json
 import re

@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/constants.py
+# File: src/core/constants.py
 # Author: Gabriel Moraes
-# Date: 2026-06-03
+# Date: October 2026
 
 from typing import List, Dict
 

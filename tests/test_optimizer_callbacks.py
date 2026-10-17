@@ -16,7 +16,7 @@
 #
 # File: tests/test_optimizer_callbacks.py
 # Author: Gabriel Moraes
-# Date: 2026-09-29
+# Date: October 2026
 
 import unittest
 from unittest.mock import MagicMock

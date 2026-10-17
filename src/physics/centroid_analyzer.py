@@ -16,7 +16,7 @@
 #
 # File: src/physics/centroid_analyzer.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 import math
 from typing import List, Tuple

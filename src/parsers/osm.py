@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: parsers/osm.py
+# File: src/parsers/osm.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 import xml.etree.ElementTree as ET
 from typing import Optional

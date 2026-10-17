@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: models/vae_tcn.py
+# File: src/models/vae_tcn.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: October 2026
 
 import torch
 import torch.nn as nn

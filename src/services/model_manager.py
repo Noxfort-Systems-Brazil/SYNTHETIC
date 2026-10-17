@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: model_manager.py
+# File: src/services/model_manager.py
 # Author: Gabriel Moraes
-# Date: 2026-06-04
+# Date: October 2026
 
 import gc
 import torch

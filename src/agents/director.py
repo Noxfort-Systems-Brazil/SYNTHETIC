@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: agents/director.py
+# File: src/agents/director.py
 # Author: Gabriel Moraes
-# Date: 2026-04-27
+# Date: October 2026
 
 import torch
 import torch.nn.functional as F

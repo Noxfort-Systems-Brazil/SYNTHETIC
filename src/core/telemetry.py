@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/telemetry.py
+# File: src/core/telemetry.py
 # Author: Gabriel Moraes
-# Date: 2026-06-08
+# Date: October 2026
 
 import threading
 import time

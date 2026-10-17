@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: models/deeponet.py
+# File: src/models/deeponet.py
 # Author: Gabriel Moraes
-# Date: 2026-09-29
+# Date: October 2026
 
 import math
 import torch

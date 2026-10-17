@@ -16,7 +16,7 @@
 #
 # File: src/physics/geo_projection.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 from typing import Tuple
 

@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: services/graph_converter.py
+# File: src/services/graph_converter.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from typing import Dict, List, Tuple
 import numpy as np

@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: flow/__init__.py
+# File: src/flow/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from src.flow.model import FlowSchedule
 from src.flow.parser import SLMFlowScheduleParser

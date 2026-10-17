@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/traffic_simulator.py
+# File: src/core/traffic_simulator.py
 # Author: Gabriel Moraes
-# Date: 2025-11-27
+# Date: October 2026
 
 import numpy as np
 import datetime

@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/simulation_logic.py
+# File: src/core/simulation_logic.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: October 2026
 
 import datetime
 import gc

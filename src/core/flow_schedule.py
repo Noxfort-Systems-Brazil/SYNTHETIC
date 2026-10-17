@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/flow_schedule.py
+# File: src/core/flow_schedule.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from typing import Any, Dict, List, Union
 from src.core.logger import logger

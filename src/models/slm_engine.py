@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: models/slm_engine.py
+# File: src/models/slm_engine.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: October 2026
 
 import gc
 import os

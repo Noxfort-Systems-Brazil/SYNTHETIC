@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: temporal_memory.py
+# File: src/services/temporal_memory.py
 # Author: Gabriel Moraes
-# Date: 2026-06-04
+# Date: October 2026
 
 import numpy as np
 import torch

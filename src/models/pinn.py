@@ -16,7 +16,7 @@
 #
 # File: src/models/pinn.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 import torch
 import torch.nn as nn

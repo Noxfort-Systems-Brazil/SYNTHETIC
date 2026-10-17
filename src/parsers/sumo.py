@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: parsers/sumo.py
+# File: src/parsers/sumo.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from typing import List, Optional, Tuple
 import xml.etree.ElementTree as ET

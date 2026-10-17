@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: agents/screenwriter.py
+# File: src/agents/screenwriter.py
 # Author: Gabriel Moraes
-# Date: 2026-02-26
+# Date: October 2026
 
 import os
 import json

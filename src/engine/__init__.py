@@ -16,7 +16,7 @@
 #
 # File: src/engine/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 from src.engine.incident_manager import IncidentManager, Incident
 

@@ -16,7 +16,7 @@
 #
 # File: src/memory/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 from src.memory.topology_memory import TopologyMemory, RoadEdge
 from src.memory.spatiotemporal_memory import SpatioTemporalMemory

@@ -16,7 +16,7 @@
 #
 # File: src/physics/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 from src.physics.greenshields import GreenshieldsModel
 from src.physics.godunov import GodunovSolver

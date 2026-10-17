@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/dependency_checker.py
+# File: src/core/dependency_checker.py
 # Author: Gabriel Moraes
-# Date: 2026-06-03
+# Date: October 2026
 
 import importlib
 import sys

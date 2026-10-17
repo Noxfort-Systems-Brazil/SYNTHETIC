@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: flow/invariants.py
+# File: src/flow/invariants.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from typing import List
 from src.core.constants import NUM_SLOTS_PER_DAY

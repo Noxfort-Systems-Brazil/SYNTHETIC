@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: models/__init__.py
+# File: src/models/__init__.py
 # Author: Gabriel Moraes
-# Date: 2026-10-06
+# Date: October 2026
 
 from src.models.st_gatv2 import STGATv2, Time2Vec
 from src.models.pinn import PINN, PINNCorrector

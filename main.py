@@ -16,7 +16,7 @@
 #
 # File: main.py
 # Author: Gabriel Moraes
-# Date: 2025-11-27
+# Date: October 2026
 
 import threading
 import sys

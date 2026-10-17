@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/map_topology.py
+# File: src/core/map_topology.py
 # Author: Gabriel Moraes
-# Date: 2026-08-16
+# Date: October 2026
 
 from typing import Dict, List, Optional, Set, Tuple
 

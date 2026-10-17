@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: physics_interpreter.py
+# File: src/services/physics_interpreter.py
 # Author: Gabriel Moraes
-# Date: 2026-06-04
+# Date: October 2026
 
 import numpy as np
 import torch

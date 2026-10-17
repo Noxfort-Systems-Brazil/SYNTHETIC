@@ -14,9 +14,9 @@
 # limitations under the License.
 # SOFTWARE.
 #
-# File: core/logger.py
+# File: src/core/logger.py
 # Author: Gabriel Moraes
-# Date: 2026-06-03
+# Date: October 2026
 
 import logging
 import os
