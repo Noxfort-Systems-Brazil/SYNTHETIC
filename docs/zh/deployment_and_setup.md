@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🚀 部署配置、CUDA 算力加速与环境搭建
 
 本文档规定 **SYNTHETIC** 的运行环境要求、Python 虚拟环境搭建、NVIDIA CUDA 12 显卡加速配置以及本地大模型权重库管理。
@@ -46,5 +49,6 @@ python main.py
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

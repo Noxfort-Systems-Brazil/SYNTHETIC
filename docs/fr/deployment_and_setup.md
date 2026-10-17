@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🚀 Déploiement, Accélération CUDA et Configuration Matérielle
 
 Ce document précise les prérequis système, la création de l'environnement virtuel Python, la configuration de l'accélération matérielle NVIDIA CUDA 12 et la mise en place du coffre de modèles GGUF pour **SYNTHETIC**.
@@ -46,5 +49,6 @@ python main.py
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

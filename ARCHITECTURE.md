@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # SYNTHETIC Architecture Overview
 
 The `SYNTHETIC` project is an AI-orchestrated engine designed for multi-modal traffic scenario synthesis. It employs a multi-agent, dynamically memory-managed architecture to generate physically coherent and contextually rich traffic data based on natural language constraints (weather, day of the week, UI-defined flow levels) and real-world map topologies.
@@ -169,6 +172,6 @@ graph TD
   <img src="docs/assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="48" /><br/>
   <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
   <i>An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis • SYNTHETIC Engine v1.0.0</i><br/>
-  <small>Licensed under the <a href="LICENSE">Apache License, Version 2.0</a>. © 2026 Noxfort Systems.</small>
+  <small>SPDX-License-Identifier: <a href="LICENSE">Apache-2.0</a> • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>
 

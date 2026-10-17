@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🧪 测试套件与质量保证指南
 
 本文档介绍 **SYNTHETIC** 平台的自动化测试架构、确定性 Mock 策略与物理不变量约束验证。
@@ -24,5 +27,6 @@
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

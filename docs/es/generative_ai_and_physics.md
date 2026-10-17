@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🧠 IA Generativa, Guardián de Física y Proceso de Difusión
 
 Este documento detalla las formulaciones neuronales, los fundamentos matemáticos y las arquitecturas de aprendizaje profundo de **SYNTHETIC**: el modelo de lenguaje local Phi-4-mini, el Guardián de Física VAE-TCN, el motor de difusión condicional por puntuación (CSDI) y el optimizador AutoML con Optuna.
@@ -66,5 +69,6 @@ Si se detecta una anomalía física severa ($> 1{,}00$), el sistema inicia autom
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

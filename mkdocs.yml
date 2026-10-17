@@ -1,13 +1,14 @@
 # ==============================================================================
 # SYNTHETIC — MkDocs Configuration (Material for MkDocs)
 # An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis
-# Copyright (C) 2026 — Noxfort Systems
+# SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com>
+# SPDX-License-Identifier: Apache-2.0
 # ==============================================================================
 
 site_name: "SYNTHETIC — Technical Documentation"
 site_description: "Technical documentation for SYNTHETIC — Multi-Modal Traffic Scenario Synthesis Engine by Noxfort Systems."
 site_author: "Gabriel Moraes — Noxfort Systems"
-copyright: "Copyright &copy; 2026 — Noxfort Systems"
+copyright: "Copyright &copy; 2026 Noxfort Systems — SPDX-License-Identifier: Apache-2.0"
 
 # Exclude conflicting GitHub folder readme and old standalone notes from MkDocs build
 exclude_docs: |

@@ -1,8 +1,11 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # SYNTHETIC
 
 <div align="center">
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://spdx.org/licenses/Apache-2.0.html)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=flat&logo=PyTorch&logoColor=white)](https://pytorch.org/)
@@ -260,9 +263,13 @@ mkdocs build --strict
 
 ## License
 
-SYNTHETIC is distributed under the **Apache License, Version 2.0**.
+SYNTHETIC is licensed under the **Apache License, Version 2.0**.
 
-This software is intended as a research and testing tool for Intelligent Transportation Systems development. All components are licensed under Apache 2.0 to facilitate academic and commercial research use.
+- **SPDX-License-Identifier:** `Apache-2.0`
+- **SPDX-FileCopyrightText:** `2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com>`
+
+See the full text in the [LICENSE](LICENSE) file or at [https://spdx.org/licenses/Apache-2.0.html](https://spdx.org/licenses/Apache-2.0.html).
+All components are licensed under Apache-2.0 to facilitate academic, scientific, and commercial research use.
 
 ---
 
@@ -289,6 +296,6 @@ Noxfort Systems is a deeptech company focused on AI-driven simulation infrastruc
   <img src="docs/assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="48" /><br/>
   <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
   <i>An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis • SYNTHETIC Engine v1.0.0</i><br/>
-  <small>Licensed under the <a href="LICENSE">Apache License, Version 2.0</a>. © 2026 Noxfort Systems.</small>
+  <small>SPDX-License-Identifier: <a href="LICENSE">Apache-2.0</a> • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>
 

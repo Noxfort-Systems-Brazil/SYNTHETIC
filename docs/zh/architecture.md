@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🏛️ SYNTHETIC: 系统架构规范与执行蓝图
 
 本规范详细阐述 **SYNTHETIC** 平台的底层技术架构。该平台是一个混合生成式人工智能系统，专为超高保真多模态城市交通场景合成而设计。文档深入剖析了两阶段执行流水线、顺序延迟加载（Sequential Lazy Loading）显存动态管理以及物理真实性与传感器感知的严格解耦。
@@ -59,5 +62,6 @@ sequenceDiagram
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

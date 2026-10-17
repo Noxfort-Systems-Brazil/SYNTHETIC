@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🧠 Generative AI, Physics Guardian & Diffusion Process
 
 This document details the neural formulations, mathematical foundations, and deep learning architectures driving **SYNTHETIC**: the Small Language Model (SLM) cognitive screenwriter, the VAE-TCN Physics Guardian, the CSDI Conditional Score-based Diffusion Engine, and the Optuna Just-In-Time AutoML tuner.
@@ -106,5 +109,6 @@ When the VAE-TCN calculates an anomaly score $> 1.00$ (indicating that the Scree
 
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

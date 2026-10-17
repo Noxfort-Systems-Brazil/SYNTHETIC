@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🔄 Pipeline de CI/CD e Automação no GitHub Actions
 
 Este documento descreve a arquitetura de Integração Contínua (CI) e Entrega Contínua (CD) do **SYNTHETIC**, incluindo fluxos automatizados de testes headless, checagem de cobertura (qualidade mínima de 80%), compilação estrita da documentação e deploy no GitHub Pages.
@@ -93,5 +96,6 @@ jobs:
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

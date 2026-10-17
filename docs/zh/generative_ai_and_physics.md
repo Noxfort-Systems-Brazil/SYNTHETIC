@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🧠 生成式 AI、物理流形守卫与扩散过程
 
 本文档详尽阐明驱动 **SYNTHETIC** 系统的深度学习神经网络架构与数学建模公式：包括端侧小语言模型 Phi-4-mini、VAE-TCN 物理守卫、基于分数的条件扩散模型 (CSDI) 以及 Optuna 即时自动化机器学习 (AutoML)。
@@ -63,5 +66,6 @@ $$\mathbf{z}_{dream} \in \mathbb{R}^{2048}$$
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

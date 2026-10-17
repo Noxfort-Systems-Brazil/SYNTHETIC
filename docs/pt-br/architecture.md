@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🏛️ SYNTHETIC: Blueprint do Sistema e Arquitetura de Execução
 
 Este documento especifica a arquitetura técnica do ecossistema **SYNTHETIC**, motor corporativo de IA generativa híbrida projetado para síntese de cenários de tráfego multimodal de alta fidelidade. O texto detalha o pipeline de execução em duas fases, o gerenciamento dinâmico de memória por carregamento tardio sequencial (Sequential Lazy Loading) e a estrita separação entre leis físicas e percepção sensorial.
@@ -112,5 +115,6 @@ SYNTHETIC/
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🗺️ Spatial Topology & Meteorological Environment Engine
 
 This document specifies the spatial mapping mechanisms, OpenStreetMap/SUMO network parsers, the Haversine Snap-to-Road projection, and the Markov-chain meteorological engine governing **SYNTHETIC**.
@@ -114,5 +117,6 @@ This prevents artificial discontinuities and provides standard 7-day cyclical pe
 
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

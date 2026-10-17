@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🗺️ Topología Espacial y Motor Meteorológico de Markov
 
 Este documento especifica los mecanismos de ingesta de redes OpenStreetMap y SUMO, la proyección Snap-to-Road mediante la fórmula de Haversine y el motor meteorológico de Markov de **SYNTHETIC**.
@@ -46,5 +49,6 @@ Todas las simulaciones comienzan en el **Lunes inmediato a las 00:00:00**, repro
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # Spatial Topology & OSM Map Integration
 
 In the modern `SYNTHETIC` architecture, static and deterministic coordinate generation (`route_data.json`) has been entirely decommissioned. The engine now operates with full spatial awareness, anchoring simulated traffic data to real-world geographies via OpenStreetMap (`.osm`).
@@ -36,6 +39,7 @@ Together, this guarantees that synthesized congestion waves propagate naturally 
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
   <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
-  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i>
+  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>
 

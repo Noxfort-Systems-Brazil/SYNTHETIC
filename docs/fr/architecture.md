@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🏛️ SYNTHETIC: Architecture Système et Modèle d'Exécution
 
 Ce document décrit l'architecture technique du système **SYNTHETIC**, moteur d'IA générative conçu pour la synthèse de scénarios de trafic multimodal urbain. Il détaille le pipeline en deux étapes, la gestion dynamique de la mémoire par chargement séquentiel à la demande (Lazy Loading) et l'isolation stricte entre physique fondamentale et perception des capteurs.
@@ -59,5 +62,6 @@ sequenceDiagram
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

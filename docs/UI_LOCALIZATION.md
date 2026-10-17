@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # UI Localization (i18n)
 
 The `SYNTHETIC` graphical interface is fully internationalized (i18n), supporting dynamic hot-swapping of languages without requiring application restarts. 
@@ -41,6 +44,7 @@ In `ui/gui.py`, a `ttk.Combobox` is bound to the `<<ComboboxSelected>>` event. W
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
   <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
-  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i>
+  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>
 

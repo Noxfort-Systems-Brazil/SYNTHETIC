@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # ⚡ Referencia de APIs y Arquitectura de Servicios
 
 Este documento proporciona la referencia técnica para desarrolladores de las principales clases, orquestadores y contratos de datos de **SYNTHETIC**.
@@ -27,5 +30,6 @@ Garantiza la carga bajo demanda y la purga inmediata de memoria de vídeo:
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🧪 Testing Suite, Code Coverage & Quality Assurance
 
 This document details the test harness, automated test suites, code coverage benchmarks (86%), deterministic mocking strategies, and regression testing implemented in **SYNTHETIC**.
@@ -113,5 +116,6 @@ To enable fast, reproducible execution without downloading multi-gigabyte models
 
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

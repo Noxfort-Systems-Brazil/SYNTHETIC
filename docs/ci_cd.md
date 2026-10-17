@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🔄 CI/CD Pipeline & GitHub Actions Automation
 
 This document outlines the Continuous Integration (CI) and Continuous Deployment (CD) architecture designed for **SYNTHETIC**, including automated testing workflows, headless GUI test execution, documentation builds, and quality gates.
@@ -147,5 +150,6 @@ jobs:
 
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

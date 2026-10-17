@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 <div align="center">
 
 <img src="../assets/synthetic-logo.png" alt="SYNTHETIC Logo" width="120" />
@@ -42,5 +45,6 @@ Este diretório reúne toda a suíte de documentação técnica em **Português 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
   <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
-  <i>Engenharia de Mobilidade Inteligente • SYNTHETIC Engine v1.0.0</i>
+  <i>Engenharia de Mobilidade Inteligente • SYNTHETIC Engine v1.0.0</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

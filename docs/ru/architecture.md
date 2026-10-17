@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🏛️ SYNTHETIC: Архитектура системы и схема выполнения
 
 Настоящий документ описывает техническую архитектуру платформы **SYNTHETIC** — системы гибридного генеративного искусственного интеллекта для высокоточного моделирования мультимодального городского дорожного движения. Документ детализирует двухфазный цикл выполнения, динамическое управление видеопамятью с последовательной ленивой загрузкой нейросетей и строгое разграничение между законами физики и датчиковым восприятием.
@@ -59,5 +62,6 @@ sequenceDiagram
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

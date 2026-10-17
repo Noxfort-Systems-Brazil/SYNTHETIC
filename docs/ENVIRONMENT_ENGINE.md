@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # Environment Engine: Temporal & Meteorological Physics
 
 The `SYNTHETIC` architecture isolates all physical laws of time and weather into the `EnvironmentManager` (`src/core/environment.py`), adhering to the Single Responsibility Principle (SRP). 
@@ -31,6 +34,7 @@ These are joined into a cohesive string (e.g., *"Moderate rain with slick roads"
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
   <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
-  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i>
+  <i>SYNTHETIC Engine • Multi-Modal Scenario Synthesis v1.0.0</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>
 

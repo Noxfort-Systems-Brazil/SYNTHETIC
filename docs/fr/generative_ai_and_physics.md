@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🧠 IA Générative, Gardien de Physique et Processus de Diffusion
 
 Ce document détaille les formulations neuronales, les fondements mathématiques et les architectures d'apprentissage profond du moteur **SYNTHETIC** : le petit modèle de langage (SLM) Phi-4-mini, le Gardien de Physique VAE-TCN, le moteur de diffusion conditionnelle CSDI et le réglage automatique d'hyperparamètres (AutoML) avec Optuna.
@@ -78,5 +81,6 @@ Lorsqu'une anomalie physique sévère ($> 1{,}00$) est détectée, SYNTHETIC lan
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

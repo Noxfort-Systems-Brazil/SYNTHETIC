@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🏛️ SYNTHETIC: System Architecture & Execution Blueprint
 
 This document specifies the technical architecture of **SYNTHETIC**, an enterprise AI-orchestrated engine designed for multi-modal traffic scenario synthesis. It outlines the two-phase generation pipeline, dynamic memory management, sequential lazy loading of deep neural networks, and the architectural separation between ground truth physics and sensor perception.
@@ -116,5 +119,6 @@ SYNTHETIC/
 
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

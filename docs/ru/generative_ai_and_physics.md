@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 🧠 Генеративный ИИ, физический страж и диффузионные процессы
 
 В данном документе представлены математические основы, нейросетевые формулировки и архитектура глубокого обучения платформы **SYNTHETIC**: локальная языковая модель Phi-4-mini, физический страж VAE-TCN, обусловленная диффузионная модель CSDI и оптимизатор гиперпараметров Optuna.
@@ -61,5 +64,6 @@ $$\mathbf{z}_{dream} \in \mathbb{R}^{2048}$$
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

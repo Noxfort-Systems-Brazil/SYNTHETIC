@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # 📡 Geradores Multimodais e Camada de Corrupção de Sensores
 
 Este documento fornece as especificações técnicas de todos os geradores de dados do **SYNTHETIC**, incluindo esquemas de saída, modelagem física, injeção de falhas e arquitetura de armazenamento em disco.
@@ -69,5 +72,6 @@ Quando ativado na interface gráfica, a camada de corrupção aplica distorçõe
 
 <div align="center">
   <img src="../assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
-  <b>Noxfort Systems</b> — <i>A State Of Art Company</i>
+  <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>

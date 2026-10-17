@@ -1,0 +1,72 @@
+# SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com>
+# SPDX-License-Identifier: Apache-2.0
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "synthetic"
+version = "1.0.0"
+description = "An AI-Orchestrated Engine for Multi-Modal Traffic Scenario Synthesis"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Gabriel Moraes", email = "gabriel.moraes@noxfortsystems.com" }
+]
+maintainers = [
+    { name = "Noxfort Systems", email = "gabriel.moraes@noxfortsystems.com" }
+]
+keywords = [
+    "traffic-simulation",
+    "spatio-temporal",
+    "diffusion-models",
+    "graph-neural-networks",
+    "physics-informed-neural-networks",
+    "its",
+    "autonomous-vehicles"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "lxml",
+    "scikit-learn",
+    "huggingface_hub",
+    "optuna",
+    "torch",
+    "torchvision",
+    "llama-cpp-python",
+    "nvidia-cuda-runtime-cu12",
+    "nvidia-cublas-cu12",
+    "tkintermapview",
+    "haversine",
+    "torch_geometric",
+    "psutil",
+    "pyproj",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "coverage>=7.0.0",
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+]
+
+[project.urls]
+Homepage = "https://noxfortsystems.com"
+Documentation = "https://noxfortsystems.com/docs/synthetic"
+Repository = "https://github.com/noxfortsystems/synthetic"

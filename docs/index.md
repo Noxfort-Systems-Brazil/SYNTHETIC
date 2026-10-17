@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Noxfort Systems <gabriel.moraes@noxfortsystems.com> -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 ---
 tags: [home, index, synthetic, hub, traffic-simulation, diffusion]
 aliases: [Documentation Index, Overview, Portal, SYNTHETIC Hub]
@@ -56,5 +59,6 @@ Designed to operate seamlessly on **GitHub**, inside **MkDocs Material**, and as
 <div align="center">
   <img src="assets/noxfort-logo.png" alt="Noxfort Systems Logo" width="45" /><br/>
   <b>Noxfort Systems</b> — <i>A State Of Art Company</i><br/>
-  <i>SYNTHETIC Engine • Enterprise Multi-Modal Traffic Synthesis v1.0.0</i>
+  <i>SYNTHETIC Engine • Enterprise Multi-Modal Traffic Synthesis v1.0.0</i><br/>
+  <small>SPDX-License-Identifier: Apache-2.0 • SPDX-FileCopyrightText: &copy; 2026 Noxfort Systems</small>
 </div>
